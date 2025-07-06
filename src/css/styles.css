@@ -1,3 +1,15 @@
+:root {
+  --color-brdr-black: #201B18;
+  --color-btn-bg-top-gold: #593822;
+  --color-btn-bg-bottom-gold: #1A1B1F;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-bg-indigo font-noto tracking-[0.5px]
+  }
+}
