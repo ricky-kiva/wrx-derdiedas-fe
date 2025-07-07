@@ -1,6 +1,6 @@
 import IconMagnifyingGlass from '../../assets/images/icon-magnifying-glass-1.svg?react';
 
-const GoldenButton = () => (
+export const GoldenButton = () => (
   <button className="bg-gradient-to-b from-brdr-goldBrdrTop to-brdr-goldBrdrBottom p-[1.5px] 
     rounded-full transition-shadow duration-300 hover:shadow-in-out-btn-top-gold"
   >
@@ -10,5 +10,3 @@ const GoldenButton = () => (
     </span>
   </button>
 );
-
-export default GoldenButton;
