@@ -1,3 +1,5 @@
+const assetDir = '/src/assets/images'
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{ts,tsx}', './index.html'],
@@ -5,7 +7,7 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'neuschwanstein-1-grad': `linear-gradient(to bottom, transparent 80%, var(--color-brdr-black) 85%), url('/src/assets/bg-neuschwanstein-1-2x-c.jpg')`,
+        'neuschwanstein-1-grad': `linear-gradient(to bottom, transparent 80%, var(--color-brdr-black) 85%), url('${assetDir}/bg-neuschwanstein-1-2x-c.jpg')`,
         'btn-gold': 'linear-gradient(to bottom, var(--color-btn-bg-top-gold) 0%, var(--color-btn-bg-bottom-gold) 90%)'
       },
       fontFamily: {
