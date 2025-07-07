@@ -10,6 +10,9 @@ export default {
         'neuschwanstein-1-grad': `linear-gradient(to bottom, transparent 80%, var(--color-brdr-black) 85%), url('${assetDir}/bg-neuschwanstein-1-2x-c.jpg')`,
         'btn-gold': 'linear-gradient(to bottom, var(--color-btn-bg-top-gold) 0%, var(--color-btn-bg-bottom-gold) 90%)'
       },
+      boxShadow: {
+        'in-out-btn-top-gold': 'inset 0 3px 1px -2px var(--color-btn-hvr-gold), 0 -4px 8px -4px var(--color-btn-hvr-gold)'
+      },
       fontFamily: {
         noto: ['Noto Sans', 'sans-serif']
       },
@@ -21,9 +24,6 @@ export default {
           goldBrdrTop: '#8A5A46',
           goldBrdrBottom: '#2E2B2D',
           black: '#201B18',
-        },
-        btn: {
-          goldHvr: '#8F604A'
         },
         form: {
           blackInShdw: '#151619',
