@@ -6,7 +6,7 @@ import type { GoldenButtonProps } from '../Button';
 
 export const MainHeader = () => {
   const buttonProps: GoldenButtonProps[] = [
-    { icon: IconBook, onClick: (() => {}) },
+    { icon: IconBook, label: 'Summarized note for DerDieDas', onClick: (() => {}) },
     { text: 'Support my new channel', icon: IconYouTube, onClick: (() => {}) }
   ];
 
