@@ -11,7 +11,8 @@ export default {
         'btn-gold': 'linear-gradient(to bottom, var(--color-btn-bg-top-gold) 0%, var(--color-btn-bg-bottom-gold) 90%)'
       },
       boxShadow: {
-        'in-out-btn-top-gold': 'inset 0 3px 1px -2px var(--color-btn-hvr-gold), 0 -4px 8px -4px var(--color-btn-hvr-gold)'
+        'in-out-btn-hvr-top-gold-bottom-black': 'inset 0 3px 1px -2px var(--color-btn-hvr-gold), 0 -4px 8px -4px var(--color-btn-hvr-gold), -2px 2px 6px var(--color-ctnr-shdw-black)',
+        'out-btn-bottom-black': 'inset 0 3px 1px -2px rgba(240,202,165,0), 0 -4px 8px -4px rgba(240,202,165,0), -2px 2px 6px var(--color-ctnr-shdw-black)'
       },
       fontFamily: {
         noto: ['Noto Sans', 'sans-serif']
@@ -29,7 +30,7 @@ export default {
           blackInShdw: '#151619',
         },
         ctnr: {
-          blackOutShdw: '#1A1B1F'
+          blackOutShdw: 'var(--color-ctnr-shdw-black)'
         }
       }
     },
