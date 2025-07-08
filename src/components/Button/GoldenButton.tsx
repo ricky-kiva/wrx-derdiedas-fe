@@ -2,16 +2,18 @@ import React from 'react';
 
 export interface GoldenButtonProps {
   text?: string;
-  icon?: React.FC<React.SVGProps<SVGSVGElement>>
+  icon?: React.FC<React.SVGProps<SVGSVGElement>>;
+  label?: string;
   onClick: () => void;
 }
 
-export const GoldenButton: React.FC<GoldenButtonProps> = ({ text, icon, onClick }) => {
+export const GoldenButton: React.FC<GoldenButtonProps> = ({ text, icon, label, onClick }) => {
   const isIconOnly = !text;
   
   return (
     <button 
-      onClick={onClick} 
+      onClick={onClick}
+      aria-label={isIconOnly ? label : text } 
       className={`flex bg-gradient-to-b from-brdr-goldBrdrTop to-brdr-goldBrdrBottom p-[1.5px] 
       rounded-full transition-shadow duration-200 shadow-out-btn-bottom-black hover:shadow-in-out-btn-hvr-top-gold-bottom-black
       ${isIconOnly ? 'h-10 aspect-square' : 'h-10'}`}
