@@ -12,7 +12,7 @@ interface FooterContactProps {
 
 const infos = [
   <a href='https://ko-fi.com/rickyslash' target='_blank' rel='noopener noreferrer'>Buy me a <u>☕︎</u></a>,
-  <>Made with ♡ by <a href='https://rickyslash.my.id/' target='_blank' rel='noopener noreferrer'><u>Rickyslash</u></a></>
+  <a href='https://rickyslash.my.id/' target='_blank' rel='noopener noreferrer'>Made with ♡ by <u>Rickyslash</u></a>
 ];
 
 const FooterContact: React.FC<FooterContactProps> = ({ socials }) => (
@@ -24,7 +24,7 @@ const FooterContact: React.FC<FooterContactProps> = ({ socials }) => (
           href={social.url}
           target='_blank'
           rel='noopener noreferrer'
-          className='inline-flex'
+          className='inline-flex duration-300 hover:drop-shadow-out-a-gold'
         >
           { React.createElement(social.icon, { className: "w-3 h-3 fill-bg-indigo" }) }
         </a>
@@ -33,7 +33,7 @@ const FooterContact: React.FC<FooterContactProps> = ({ socials }) => (
     {infos.map((info, i) => (
       <React.Fragment key={i}>
         <span>✦</span>
-        <span>{info}</span>
+        <span className='duration-300 hover:text-shadow-a-gold'>{info}</span>
       </React.Fragment>
     ))}
   </div>
