@@ -2,6 +2,8 @@ import IconGitHub from '../../assets/images/icon-github-1.svg?react';
 import IconInstagram from '../../assets/images/icon-instagram-1.svg?react';
 import IconLinkedIn from '../../assets/images/icon-linkedin-1.svg?react';
 import FooterContact from './FooterContact';
+import FooterListenTo from './FooterListenTo';
+import FooterNote from './FooterNote';
 
 const labelTemplate = (social: string) => `Visit my ${social}`;
 
@@ -20,5 +22,15 @@ const contactSocials =[{
 }];
 
 export const MainFooter = () => (
-  <FooterContact socials={contactSocials}/>
+  <div className='flex flex-col md:flex-row w-full justify-between items-center gap-y-3 md:gap-y-0'>
+    <div className='order-1 md:order-2'>
+      <FooterListenTo />  
+    </div>
+    <div className='order-2'>
+      <FooterContact socials={contactSocials} />
+    </div>
+    <div className='order-3 md:order-1'>
+      <FooterNote />
+    </div>
+  </div>
 );
