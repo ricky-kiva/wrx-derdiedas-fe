@@ -6,13 +6,15 @@ import type { GoldenButtonProps } from '../Button';
 
 export const MainHeader = () => {
   const buttonProps: GoldenButtonProps[] = [
-    { icon: IconBook, label: 'Summarized note for DerDieDas', onClick: (() => {}) },
+    { icon: IconBook, label: 'Note for DerDieDas', onClick: (() => {}) },
     { text: 'Support my new channel', icon: IconYouTube, onClick: (() => {}) }
   ];
 
   return (
     <div className='w-full flex justify-between'>
-      <img src={LogoDerDieDas} alt='DerDieDas Logo' className='w-16' />
+      <a href='/'>
+        <img src={LogoDerDieDas} alt='DerDieDas Logo' className='w-16 hover:animate-spin-propeller' />
+      </a>
       <HeaderMenu buttonProps={buttonProps} />
     </div>
   );

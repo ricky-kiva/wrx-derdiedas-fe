@@ -8,6 +8,7 @@ export default {
     extend: {
       backgroundImage: {
         'neuschwanstein-1-grad': `linear-gradient(to bottom, transparent 80%, var(--color-brdr-black) 85%), url('${assetDir}/bg-neuschwanstein-1-2x-c.jpg')`,
+        'neuschwanstein-1-mobile-grad': `linear-gradient(to bottom, transparent 75%, var(--color-brdr-black) 80%), url('${assetDir}/bg-neuschwanstein-1-2x-c.jpg')`,
         'btn-gold': 'linear-gradient(to bottom, var(--color-btn-bg-top-gold) 0%, var(--color-btn-bg-bottom-gold) 90%)'
       },
       boxShadow: {
@@ -16,6 +17,18 @@ export default {
       },
       dropShadow: {
         'out-a-gold': '0 0 4px var(--color-btn-hvr-gold)'
+      },
+      keyframes: {
+        'spin-propeller': {
+          '0%': { transform: 'rotate(0deg)' },
+          '10%': { transform: 'rotate(30deg)' },
+          '30%': { transform: 'rotate(120deg)' },
+          '60%': { transform: 'rotate(300deg)' },
+          '100%': { transform: 'rotate(4320deg)' },
+        }
+      },
+      animation: {
+        'spin-propeller': 'spin-propeller 1.6s cubic-bezier(0.2, 0.0, 0.1, 1) forwards'
       },
       fontFamily: {
         noto: ['Noto Sans', 'sans-serif']
