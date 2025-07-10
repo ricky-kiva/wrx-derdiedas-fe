@@ -22,14 +22,15 @@ const contactSocials =[{
 }];
 
 export const MainFooter = () => (
-  <div className='flex flex-col md:flex-row w-full justify-between items-center gap-y-3 md:gap-y-0'>
+  <div className='flex flex-col md:flex-row w-full justify-between items-center gap-x-4
+  gap-y-3 md:gap-y-0'>
     <div className='order-1 md:order-2'>
       <FooterListenTo />  
     </div>
-    <div className='order-2'>
+    <div className='order-2 md:w-1/3 lg:w-auto'>
       <FooterContact socials={contactSocials} />
     </div>
-    <div className='order-3 md:order-1'>
+    <div className='order-3 md:order-1 md:w-1/3 lg:w-auto'>
       <FooterNote />
     </div>
   </div>
