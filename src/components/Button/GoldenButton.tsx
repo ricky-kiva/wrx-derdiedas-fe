@@ -15,7 +15,8 @@ export const GoldenButton: React.FC<GoldenButtonProps> = ({ text, icon, label, o
       onClick={onClick}
       type='submit'
       aria-label={isIconOnly ? label : text } 
-      className={`flex border-gold-color-only-plus-hover rounded-full p-[1.5px] ${isIconOnly ? 'h-10 aspect-square' : 'h-10'}`}
+      className={`flex border-gold-color-only border-gold-hover rounded-full p-[1.5px] 
+        ${isIconOnly ? 'h-10 aspect-square' : 'h-10'}`}
     >
       <span className={`flex items-center bg-btn-gold rounded-full
         ${isIconOnly ? 'w-full h-full justify-center' : 'gap-x-2 px-5'}`}

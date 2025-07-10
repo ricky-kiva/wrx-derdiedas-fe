@@ -24,8 +24,11 @@
     @apply text-xs text-bg-indigo font-noto tracking-[0.5px];
   }
   
-  .border-gold-color-only-plus-hover {
-    @apply bg-gradient-to-b from-brdr-goldBrdrTop to-brdr-goldBrdrBottom 
-    transition-shadow duration-200 shadow-out-btn-bottom-black hover:shadow-in-out-btn-hvr-top-gold-bottom-black;
+  .border-gold-color-only {
+    @apply bg-gradient-to-b from-brdr-goldBrdrTop to-brdr-goldBrdrBottom shadow-out-btn-bottom-black;
+  }
+
+  .border-gold-hover {
+    @apply transition-shadow duration-200 hover:shadow-in-out-btn-hvr-top-gold-bottom-black;
   }
 }
