@@ -4,7 +4,7 @@ export interface GoldenButtonProps {
   text?: string;
   icon?: React.FC<React.SVGProps<SVGSVGElement>>;
   label?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const GoldenButton: React.FC<GoldenButtonProps> = ({ text, icon, label, onClick }) => {
@@ -13,10 +13,9 @@ export const GoldenButton: React.FC<GoldenButtonProps> = ({ text, icon, label, o
   return (
     <button 
       onClick={onClick}
+      type='submit'
       aria-label={isIconOnly ? label : text } 
-      className={`flex bg-gradient-to-b from-brdr-goldBrdrTop to-brdr-goldBrdrBottom p-[1.5px] 
-      rounded-full transition-shadow duration-200 shadow-out-btn-bottom-black hover:shadow-in-out-btn-hvr-top-gold-bottom-black
-      ${isIconOnly ? 'h-10 aspect-square' : 'h-10'}`}
+      className={`flex border-gold-color-only-plus-hover rounded-full p-[1.5px] ${isIconOnly ? 'h-10 aspect-square' : 'h-10'}`}
     >
       <span className={`flex items-center bg-btn-gold rounded-full
         ${isIconOnly ? 'w-full h-full justify-center' : 'gap-x-2 px-5'}`}
