@@ -11,7 +11,8 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ buttonProps }) => (
         key={i} 
         text={prop.text} 
         icon={prop.icon}
-        label={prop.label} 
+        label={prop.label}
+        hideTextOnMobile={prop.hideTextOnMobile} 
         onClick={prop.onClick} />
     ))}
   </div>
