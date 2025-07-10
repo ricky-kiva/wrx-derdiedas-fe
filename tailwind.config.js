@@ -9,7 +9,8 @@ export default {
       backgroundImage: {
         'neuschwanstein-1-grad': `linear-gradient(to bottom, transparent 80%, var(--color-brdr-black) 85%), url('${assetDir}/bg-neuschwanstein-1-2x-c.jpg')`,
         'neuschwanstein-1-mobile-grad': `linear-gradient(to bottom, transparent 75%, var(--color-brdr-black) 80%), url('${assetDir}/bg-neuschwanstein-1-2x-c.jpg')`,
-        'btn-gold': 'linear-gradient(to bottom, var(--color-btn-bg-top-gold) 0%, var(--color-btn-bg-bottom-gold) 90%)'
+        'btn-gold': 'linear-gradient(to bottom, var(--color-btn-bg-top-gold) 0%, var(--color-btn-bg-bottom-gold) 90%)',
+        'form-black': 'linear-gradient(to bottom, var(--color-form-shdw-in-black) 10%, var(--color-btn-bg-bottom-gold) 25%)'
       },
       boxShadow: {
         'in-out-btn-hvr-top-gold-bottom-black': 'inset 0 3px 1px -2px var(--color-btn-hvr-gold), 0 -4px 8px -4px var(--color-btn-hvr-gold), -2px 2px 6px var(--color-ctnr-shdw-black)',
@@ -41,9 +42,6 @@ export default {
           goldBrdrTop: '#8A5A46',
           goldBrdrBottom: '#2E2B2D',
           black: '#201B18',
-        },
-        form: {
-          blackInShdw: '#151619',
         },
         ctnr: {
           blackOutShdw: 'var(--color-ctnr-shdw-black)'
