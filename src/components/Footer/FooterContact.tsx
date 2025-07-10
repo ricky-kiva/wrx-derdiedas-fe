@@ -33,7 +33,7 @@ const FooterContact: React.FC<FooterContactProps> = ({ socials }) => (
     {infos.map((info, i) => (
       <React.Fragment key={i}>
         <span>✦</span>
-        <span className='duration-300 hover:text-shadow-a-gold'>{info}</span>
+        <span className='duration-300 hover:text-shadow-a-gold text-center'>{info}</span>
       </React.Fragment>
     ))}
   </div>
