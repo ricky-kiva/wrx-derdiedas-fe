@@ -17,7 +17,8 @@ export default {
         'out-btn-bottom-black': 'inset 0 3px 1px -2px rgba(240,202,165,0), 0 -4px 8px -4px rgba(240,202,165,0), -2px 2px 6px var(--color-ctnr-shdw-black)',
       },
       dropShadow: {
-        'out-a-gold': '0 0 4px var(--color-btn-hvr-gold)'
+        'out-a-gold': '0 0 4px var(--color-btn-hvr-gold)',
+        'out-txt-black': '0 0 2px rgba(0,0,0,1), 0 0 4px rgba(0,0,0,0.75)'
       },
       keyframes: {
         'spin-propeller': {
@@ -37,6 +38,9 @@ export default {
       colors: {
         bg: {
           indigo: '#EBD8BA', 
+        },
+        txt: {
+          black: 'var(--color-btn-bg-bottom-gold)'
         },
         brdr: {
           goldBrdrTop: '#8A5A46',
@@ -60,6 +64,9 @@ export default {
       addUtilities({
         '.text-shadow-a-gold': {
           'text-shadow': '0 0 6px var(--color-btn-hvr-gold)'
+        },
+        '.drop-shadow-txt-black': {
+          filter: `drop-shadow(0 0 2px rgba(26, 27, 31, 1)) drop-shadow(0 0 3px rgba(26, 27, 31, 0.8)) drop-shadow(0 0 4px rgba(26, 27, 31, 0.6))`,
         }
       })
     })
