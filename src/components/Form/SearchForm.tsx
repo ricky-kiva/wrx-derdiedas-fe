@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { getByWord } from '../../services/nouns';
 import { getGenderLabel } from '../../utils/gender';
 import type { Gender, SearchNounItem } from '../../types/types';
+import { parseErrorMessage } from '../../commons/exceptions';
 
 interface SearchFormProps {
   setData: React.Dispatch<React.SetStateAction<SearchNounItem | null>>
+  setErrorMsg: React.Dispatch<React.SetStateAction<string | null>>
 }
 
-export const SearchForm: React.FC<SearchFormProps> = ({ setData }) => {
+export const SearchForm: React.FC<SearchFormProps> = ({ setData, setErrorMsg }) => {
   const [input, setInput] = useState('');
   const [gender, setGender] = useState<Gender | null>(null);
 
@@ -25,9 +27,8 @@ export const SearchForm: React.FC<SearchFormProps> = ({ setData }) => {
       setGender(first.item.gender);
       setData(first);
     } catch (e: unknown) {
-      console.error('Search failed:', e);
-
-      // TO DO: THROW ERROR TO PARENT HERE
+      setErrorMsg(parseErrorMessage(e));
+      setTimeout(() => setErrorMsg(null), 2000);
     };
   };
 
