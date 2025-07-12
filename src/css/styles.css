@@ -35,6 +35,11 @@
   .border-gold-hover-center {
     @apply transition-shadow duration-200 hover:shadow-in-out-btn-hvr-center-gold-bottom-black;
   }
+
+  .scrollbar-custom-gold {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-btn-bg-top-gold) transparent;
+  }
 }
 
 @layer utilities {
