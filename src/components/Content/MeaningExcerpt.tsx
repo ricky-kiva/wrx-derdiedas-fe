@@ -13,7 +13,7 @@ export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings }) => {
     .join(' • ');
   
   return (
-    <div className='w-full flex flex-col gap-y-3 px-6 drop-shadow-txt-black'>
+    <div className='w-full flex flex-col gap-y-3 drop-shadow-txt-black'>
       <h3>MEANINGS</h3>
       <p>
         { meaningsPreview }

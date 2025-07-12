@@ -7,7 +7,7 @@ import type { Gender, SearchNounItem } from '../../types/types';
 import { parseErrorMessage } from '../../commons/exceptions';
 
 interface SearchFormProps {
-  setData: React.Dispatch<React.SetStateAction<SearchNounItem | null>>
+  setData: React.Dispatch<React.SetStateAction<SearchNounItem[] | null>>
   setErrorMsg: React.Dispatch<React.SetStateAction<string | null>>
 }
 
@@ -30,12 +30,12 @@ export const SearchForm: React.FC<SearchFormProps> = ({ setData, setErrorMsg }) 
 
     try {
       const res = await getByWord(input);
-      
-      const first = res.data.data[0];
 
-      setInput(first.item.word);
-      setGender(first.item.gender);
-      setData(first);
+      const data = res.data.data;
+
+      setInput(data[0].item.word);
+      setGender(data[0].item.gender);
+      setData(data);
     } catch (e: unknown) {
       displayErrorMsg(e);
     };
