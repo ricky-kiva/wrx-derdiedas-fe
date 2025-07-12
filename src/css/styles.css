@@ -21,7 +21,7 @@
 
 @layer base {
   body {
-    @apply text-xs text-bg-indigo font-noto tracking-[0.5px];
+    @apply text-xs text-bg-indigo font-noto tracking-[0.5px] leading-5;
   }
   
   .border-gold-color-only {
