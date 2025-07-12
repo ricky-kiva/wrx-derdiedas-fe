@@ -11,7 +11,7 @@ export const Matches: React.FC<MatchesProps> = ({ words }) => {
   return (
     <>
       <hr className='border-t border-bg-indigo drop-shadow-txt-black' />
-      <div className='flex gap-1'>
+      <div className='flex gap-1 overflow-x-auto rounded-full scrollbar-custom-gold'>
         {words.map((word) => (
           <MatchItem word={word} />
         ))}
