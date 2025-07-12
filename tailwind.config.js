@@ -15,6 +15,7 @@ export default {
       boxShadow: {
         'in-out-btn-hvr-top-gold-bottom-black': 'inset 0 3px 1px -2px var(--color-btn-hvr-gold), 0 -4px 8px -4px var(--color-btn-hvr-gold), -2px 2px 6px var(--color-ctnr-shdw-black)',
         'out-btn-bottom-black': 'inset 0 3px 1px -2px rgba(240,202,165,0), 0 -4px 8px -4px rgba(240,202,165,0), -2px 2px 6px var(--color-ctnr-shdw-black)',
+        'in-out-btn-hvr-center-gold-bottom-black': 'inset 0 0 1px -2px var(--color-btn-hvr-gold), 0 0 6px -3px var(--color-btn-hvr-gold), -2px 2px 6px var(--color-ctnr-shdw-black)',
       },
       dropShadow: {
         'out-a-gold': '0 0 4px var(--color-btn-hvr-gold)',
@@ -53,7 +54,7 @@ export default {
         brdr: {
           goldBrdrTop: '#8A5A46',
           goldBrdrBottom: '#2E2B2D',
-          black: '#201B18',
+          black: 'var(--color-brdr-black)',
         },
         ctnr: {
           blackOutShdw: 'var(--color-ctnr-shdw-black)'
