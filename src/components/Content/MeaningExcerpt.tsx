@@ -8,7 +8,7 @@ export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings }) => {
   return (
     <div className='w-full flex flex-col gap-y-3 px-6 drop-shadow-txt-black'>
       <h3>MEANINGS</h3>
-      <p className='font-bold'>
+      <p>
         { meanings
         .slice(0, 3)
         .map((m) => m.charAt(0).toUpperCase() + m.slice(1))
