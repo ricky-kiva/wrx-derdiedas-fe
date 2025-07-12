@@ -11,7 +11,7 @@ function App() {
     <MainContainer children={
       <>
         <MainHeader />
-        <FormContainer setErrorMsg={setErrorMsg}/>
+        <FormContainer setErrorMsg={setErrorMsg} />
         <MainFooter />
         {errorMsg && <JumpingError msg={errorMsg} />}
       </>
