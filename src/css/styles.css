@@ -31,6 +31,10 @@
   .border-gold-hover {
     @apply transition-shadow duration-200 hover:shadow-in-out-btn-hvr-top-gold-bottom-black;
   }
+
+  .border-gold-hover-center {
+    @apply transition-shadow duration-200 hover:shadow-in-out-btn-hvr-center-gold-bottom-black;
+  }
 }
 
 @layer utilities {
