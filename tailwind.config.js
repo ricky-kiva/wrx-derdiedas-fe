@@ -27,10 +27,18 @@ export default {
           '30%': { transform: 'rotate(120deg)' },
           '60%': { transform: 'rotate(300deg)' },
           '100%': { transform: 'rotate(4320deg)' },
+        },
+        'error-jump': {
+          '0%':   { transform: 'translate(-50%, 200%)', opacity: '0' },
+          '35%':  { transform: 'translate(-50%, -12px)', opacity: '1' },
+          '50%':  { transform: 'translate(-50%, 0%)',    opacity: '1' },
+          '85%':  { transform: 'translate(-50%, 0%)',    opacity: '1' },
+          '100%': { transform: 'translate(-50%, 200%)',  opacity: '0' }
         }
       },
       animation: {
-        'spin-propeller': 'spin-propeller 1.6s cubic-bezier(0.2, 0.0, 0.1, 1) forwards'
+        'spin-propeller': 'spin-propeller 1.6s cubic-bezier(0.2, 0.0, 0.1, 1) forwards',
+        'error-jump': 'error-jump 2s ease-in-out forwards'
       },
       fontFamily: {
         noto: ['Noto Sans', 'sans-serif']
