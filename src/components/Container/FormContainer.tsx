@@ -18,7 +18,7 @@ export const FormContainer: React.FC<FormContainerProps> = ({ setErrorMsg: pSetE
 
   return (
     <div className='w-full md:w-3/4 lg:w-1/2 flex flex-col gap-y-6 items-center self-center 
-      transform -translate-y-8'
+      transform -translate-y-10'
     >
       <div className="relative w-full">
         <SearchForm setData={setData} setErrorMsg={setErrorMsg} />
