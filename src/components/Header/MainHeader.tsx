@@ -5,19 +5,20 @@ import IconGamepad from '../../assets/images/icon-gamepad-1.svg?react';
 import HeaderMenu from './HeaderMenu';
 import type { GoldenButtonProps } from '../Button';
 
-export const MainHeader = () => {
-  const buttonProps: GoldenButtonProps[] = [
-    { icon: IconBook, label: 'Note for DerDieDas', onClick: (() => {}) },
-    { text: 'Support my new channel', icon: IconYouTube, hideTextOnMobile: true, onClick: (() => {}) },
-    { text: 'Play', icon: IconGamepad, hideTextOnMobile: false, onClick: (() => {}) }
-  ];
+const openMyChannel = () => window
+  .open('https://www.youtube.com/@rexzeppelin', '_blank', 'noopener,noreferrer');
 
-  return (
-    <div className='w-full flex justify-between'>
-      <a href='/'>
-        <img src={LogoDerDieDas} alt='DerDieDas Logo' className='w-16 hover:animate-spin-propeller' />
-      </a>
-      <HeaderMenu buttonProps={buttonProps} />
-    </div>
-  );
-};
+const buttonProps: GoldenButtonProps[] = [
+  { icon: IconBook, label: 'Note for DerDieDas', onClick: (() => {}) },
+  { text: 'Support my new channel', icon: IconYouTube, hideTextOnMobile: true, onClick: openMyChannel },
+  { text: 'Play', icon: IconGamepad, hideTextOnMobile: false, onClick: (() => {}) }
+];
+
+export const MainHeader = () => (
+  <div className='w-full flex justify-between'>
+    <a href='/'>
+      <img src={LogoDerDieDas} alt='DerDieDas Logo' className='w-16 hover:animate-spin-propeller' />
+    </a>
+    <HeaderMenu buttonProps={buttonProps} />
+  </div>
+);
