@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { SearchNounItem } from '../../types/types';
 import { SearchForm } from '../Form';
 import { MeaningExcerpt } from '../Content';
@@ -11,7 +11,9 @@ export const FormContainer: React.FC<FormContainerProps> = ({ setErrorMsg: pSetE
   const [data, setData] = useState<SearchNounItem | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  pSetErrorMsg(errorMsg);
+  useEffect(() => {
+    pSetErrorMsg(errorMsg);
+  }, [errorMsg, pSetErrorMsg]);
 
   return (
     <div className='w-full md:w-3/4 lg:w-1/2 flex flex-col gap-y-6 items-center self-center transform -translate-y-8'>
