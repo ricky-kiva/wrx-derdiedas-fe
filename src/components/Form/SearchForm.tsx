@@ -15,8 +15,18 @@ export const SearchForm: React.FC<SearchFormProps> = ({ setData, setErrorMsg }) 
   const [input, setInput] = useState('');
   const [gender, setGender] = useState<Gender | null>(null);
 
+  const displayErrorMsg = (e: unknown) => {
+    setErrorMsg(parseErrorMessage(e));
+    setTimeout(() => setErrorMsg(null), 2000);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!input) {
+      displayErrorMsg('Hey, you forgot to type a word!');
+      return;
+    }
 
     try {
       const res = await getByWord(input);
@@ -27,8 +37,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ setData, setErrorMsg }) 
       setGender(first.item.gender);
       setData(first);
     } catch (e: unknown) {
-      setErrorMsg(parseErrorMessage(e));
-      setTimeout(() => setErrorMsg(null), 2000);
+      displayErrorMsg(e);
     };
   };
 
