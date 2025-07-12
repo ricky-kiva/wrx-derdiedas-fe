@@ -7,9 +7,13 @@ export const FormContainer: React.FC = () => {
   const [data, setData] = useState<SearchNounItem | null>(null);
 
   return (
-    <div className='w-full md:w-3/4 lg:w-1/2 flex flex-col gap-y-6 items-center'>
-      <SearchForm setData={setData} />
-      <MeaningExcerpt meanings={data?.item.meanings} />
+    <div className='w-full md:w-3/4 lg:w-1/2 flex flex-col gap-y-6 items-center self-center transform -translate-y-8'>
+      <div className="relative w-full">
+        <SearchForm setData={setData} />
+        <div className="absolute top-[calc(100%+1rem)] w-full">
+          <MeaningExcerpt meanings={data?.item.meanings} />
+        </div>
+      </div>
     </div>
   );
 };
