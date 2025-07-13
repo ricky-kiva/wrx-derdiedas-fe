@@ -25,6 +25,8 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const displayErrorMsg = (e: unknown) => {
     setErrorMsg(parseErrorMessage(e));
     setTimeout(() => setErrorMsg(null), 2000);
+    setData(null);
+    setGender(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,6 +43,11 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
       const res = await getByWord(input);
 
       const data = res.data.data;
+
+      if (data.length === 0) {
+        displayErrorMsg('Couldn\'t find that word!');
+        return;
+      }
 
       setInput(data[0].item.word);
       setGender(data[0].item.gender);
