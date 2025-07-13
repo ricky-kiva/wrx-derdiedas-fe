@@ -1,19 +1,25 @@
 import type React from 'react';
 import MatchItem from './MatchItem';
 
-interface MatchesProps {
-  words: string[]
+interface MatchesMatchData {
+  id: string,
+  word: string
 }
 
-export const Matches: React.FC<MatchesProps> = ({ words }) => {
-  if (!words || words.length === 0) return null;
+interface MatchesProps {
+  matchesData: MatchesMatchData[],
+  onMatchClick: (word: string) => void;
+}
+
+export const Matches: React.FC<MatchesProps> = ({ matchesData, onMatchClick }) => {
+  if (!matchesData || matchesData.length === 0) return null;
 
   return (
     <>
       <hr className='border-t border-bg-indigo drop-shadow-txt-black' />
       <div className='flex gap-1 overflow-x-auto rounded-full scrollbar-custom-gold'>
-        {words.map((word) => (
-          <MatchItem word={word} />
+        {matchesData.slice(1).map(({ id, word }) => (
+          <MatchItem key={id} word={word} onClick={() => onMatchClick(word)} />
         ))}
       </div>
     </>

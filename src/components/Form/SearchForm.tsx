@@ -1,7 +1,7 @@
 import { GoldenButton } from '../Button';
 import IconMagnifyingGlass from '../../assets/images/icon-magnifying-glass-1.svg?react';
 import LottieLoading from '../../assets/lottie/loading-1.json';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { getByWord } from '../../services/nouns';
 import { getGenderLabel } from '../../utils/gender';
 import type { Gender, SearchNounItem } from '../../types/types';
@@ -9,14 +9,18 @@ import { parseErrorMessage } from '../../utils/error';
 import Lottie from 'lottie-react';
 
 interface SearchFormProps {
-  setData: React.Dispatch<React.SetStateAction<SearchNounItem[] | null>>
-  setErrorMsg: React.Dispatch<React.SetStateAction<string | null>>
+  gender: Gender | null;
+  input: string;
+  setData: React.Dispatch<React.SetStateAction<SearchNounItem[] | null>>;
+  setGender: React.Dispatch<React.SetStateAction<Gender | null>>;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+  setErrorMsg: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export const SearchForm: React.FC<SearchFormProps> = ({ setData, setErrorMsg }) => {
-  const [input, setInput] = useState('');
+export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [gender, setGender] = useState<Gender | null>(null);
+
+  const { gender, input, setData, setGender, setInput, setErrorMsg } = props;
 
   const displayErrorMsg = (e: unknown) => {
     setErrorMsg(parseErrorMessage(e));
