@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { getByWord } from '../../services/nouns';
 import { getGenderLabel } from '../../utils/gender';
 import type { Gender, SearchNounItem } from '../../types/types';
-import { parseErrorMessage } from '../../commons/exceptions';
+import { parseErrorMessage } from '../../utils/error';
 import Lottie from 'lottie-react';
 
 interface SearchFormProps {
