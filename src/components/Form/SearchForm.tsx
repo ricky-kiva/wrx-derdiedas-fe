@@ -67,7 +67,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
         <div className='w-16 flex py-[1.5px] pl-[1.5px] pr-[0.75px] border-gold-color-only rounded-l-full'>
           <div className='w-16 flex justify-center items-center gap-x-2 px-5 bg-btn-gold rounded-l-full'>
             { isLoading 
-              ? <Lottie animationData={LottieLoading} loop autoplay className='scale-[1.75] origin-center'/>
+              ? <Lottie animationData={LottieLoading} loop autoplay className='scale-[1.75] origin-center ml-1'/>
               : <span className='ml-1'>{getGenderLabel(gender)}</span> }
           </div>
         </div>
