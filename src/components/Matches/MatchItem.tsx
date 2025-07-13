@@ -10,6 +10,7 @@ const MatchItem: React.FC<MatchItemProps> = ({ word, onClick }) => (
     className='px-3 py-1 bg-txt-black rounded-full border-gold-hover-center shadow-out-btn-bottom-black
       whitespace-nowrap'
     type='button'
+    aria-label={`Check ${word} noun`}
     onClick={onClick}
   >
     {word}
