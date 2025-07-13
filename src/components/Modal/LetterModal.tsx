@@ -21,7 +21,7 @@ export const LetterModal: React.FC<LetterModalProps> = ({ setShowModal }) => (
       </div>
       <div className='flex-1 flex flex-col justify-between px-12 py-10'>
         <h3 className="opacity-85 mb-4">MEANINGS.</h3>
-        <div className="flex-1 overflow-y-auto scrollbar-custom-gold pacity-85">
+        <div className="flex-1 overflow-y-auto scrollbar-custom-gold opacity-85">
           <p>
             Whispers dance upon the midnight air,
             Shadows weave the stories we all share.
