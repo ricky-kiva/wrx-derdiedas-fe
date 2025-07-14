@@ -12,7 +12,7 @@ interface MatchesProps {
 }
 
 export const Matches: React.FC<MatchesProps> = ({ matchesData, onMatchClick }) => {
-  if (!matchesData || matchesData.length === 0) return null;
+  if (matchesData.length <= 1) return null;
 
   return (
     <>
