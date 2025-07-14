@@ -23,6 +23,18 @@
   body {
     @apply text-xs text-bg-indigo font-noto tracking-[0.5px] leading-5;
   }
+
+  .base-table-data {
+    @apply py-2
+  }
+
+  .base-table-heading-data {
+    @apply py-4
+  }
+
+  .base-table-row {
+    @apply border-b border-a-goldHvr
+  }
   
   .border-gold-color-only {
     @apply bg-gradient-to-b from-brdr-goldBrdrTop to-brdr-goldBrdrBottom shadow-out-btn-bottom-black;
