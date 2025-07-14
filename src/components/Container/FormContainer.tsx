@@ -3,12 +3,17 @@ import type { Gender, SearchNounItem } from '../../types/types';
 import { SearchForm } from '../Form';
 import { MeaningExcerpt } from '../Content';
 import { Matches } from '../Matches';
+import type { LetterModalContent } from '../Modal';
 
 interface FormContainerProps {
-  setErrorMsg: React.Dispatch<React.SetStateAction<string | null>>
+  setErrorMsg: React.Dispatch<React.SetStateAction<string | null>>;
+  setModalContent: React.Dispatch<React.SetStateAction<LetterModalContent | undefined>>;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const FormContainer: React.FC<FormContainerProps> = ({ setErrorMsg: pSetErrorMsg }) => {
+export const FormContainer: React.FC<FormContainerProps> = (props) => {
+  const { setShowModal, setModalContent, setErrorMsg: pSetErrorMsg } = props;
+
   const [data, setData] = useState<SearchNounItem[] | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [firstItemGender, setFirstItemGender] = useState<Gender | null>(null);
@@ -47,7 +52,11 @@ export const FormContainer: React.FC<FormContainerProps> = ({ setErrorMsg: pSetE
         <div className="absolute top-[calc(100%+1.5rem)] w-full flex flex-col gap-y-5
           px-6"
         >
-          <MeaningExcerpt meanings={data?.[0]?.item.meanings} />
+          <MeaningExcerpt 
+            meanings={data?.[0]?.item.meanings} 
+            setShowModal={setShowModal}
+            setModalContent={setModalContent} 
+          />
           <Matches 
             matchesData={data 
               ? data.map(d => ({ id: d.item.id, word: d.item.word })) 
