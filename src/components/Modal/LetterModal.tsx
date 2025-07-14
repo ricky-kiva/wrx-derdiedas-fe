@@ -28,9 +28,9 @@ export const LetterModal: React.FC<LetterModalProps> = ({ setShowModal, content 
             x
           </button>
         </div>
-        <div className='flex-1 flex flex-col justify-between px-12 py-10'>
+        <div className='flex-1 flex flex-col min-h-0 px-12 py-10'>
           <h3 className="mb-4 opacity-85 uppercase">{content?.title}</h3>
-          <div className="flex-1 overflow-y-auto scrollbar-custom-gold opacity-85">
+          <div className="flex-1 overflow-y-auto min-h-0 scrollbar-custom-gold opacity-85">
             {content?.body}
           </div>
           <ModalFooterWax />
