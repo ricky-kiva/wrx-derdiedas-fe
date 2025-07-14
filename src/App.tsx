@@ -19,7 +19,7 @@ function App() {
       {showModal && <LetterModal setShowModal={setShowModal} content={modalContent} />}
       <MainContainer children={
         <>
-          <MainHeader setShowModal={setShowModal}/>
+          <MainHeader setShowModal={setShowModal} setModalContent={setModalContent} />
           <FormContainer 
             setErrorMsg={setErrorMsg} 
             setShowModal={setShowModal} 
