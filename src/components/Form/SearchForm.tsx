@@ -3,7 +3,7 @@ import IconMagnifyingGlass from '../../assets/images/icon-magnifying-glass-1.svg
 import LottieLoading from '../../assets/lottie/loading-1.json';
 import React, { useState } from 'react';
 import { getByWord } from '../../services/nouns';
-import { getGenderLabel } from '../../utils/gender';
+import { getGenderLabel, highlightGenderRules } from '../../utils/gender';
 import type { Gender, SearchNounItem } from '../../types/types';
 import { parseErrorMessage } from '../../utils/error';
 import Lottie from 'lottie-react';
@@ -19,6 +19,7 @@ interface SearchFormProps {
 
 export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { gender, input, setData, setGender, setInput, setErrorMsg } = props;
 
@@ -52,6 +53,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
       setInput(data[0].item.word);
       setGender(data[0].item.gender);
       setData(data);
+      setIsSubmitted(true);
     } catch (e: unknown) {
       displayErrorMsg(e);
     } finally {
@@ -71,13 +73,22 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
               : <span className='ml-1'>{getGenderLabel(gender)}</span> }
           </div>
         </div>
-        <div className='w-full flex p-[1.5px] border-gold-color-only rounded-r-full'>
+        <div className='relative w-full flex p-[1.5px] border-gold-color-only rounded-r-full'>
+          {isSubmitted && gender && (
+            <div className="absolute inset-0 flex items-center px-[0.875rem] text-bg-indigo pointer-events-none">
+              {highlightGenderRules(input)}
+            </div>
+          )}
           <input 
             type='text' 
             name='word' 
             value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className='w-full px-3 bg-form-black rounded-r-full outline-none' 
+            onChange={(e) => {
+              setInput(e.target.value);
+              if (isSubmitted) setIsSubmitted(false);
+            }}
+            className={`w-full px-3 bg-form-black rounded-r-full outline-none
+              ${(isSubmitted && gender) ? 'text-transparent caret-bg-indigo' : ''}`}
           />
         </div>
       </div>
