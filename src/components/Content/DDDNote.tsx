@@ -1,5 +1,4 @@
-import type { JSX } from 'react';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface GenderRowData {
   condition: string,
@@ -8,37 +7,43 @@ interface GenderRowData {
 
 const masculineRowData: GenderRowData[] = [
   { condition: 'Male People', examples: [ 'der Mann (man)', 'der Vater (father)' ] },
-  { condition: 'Seasons', examples: [ 'der Sommer (summer)', 'der Winter (winter)' ] },
-  { condition: 'Precipitations', examples: [ 'der Regen (rain)', 'der Schauer (shower)' ] },
-  { condition: 'Date & Time Periods', examples: [ 'der Montag (monday)', 'der Morgen (morning)' ] },
-  { condition: 'Most -ling Endings', examples: [ 'der Zwilling (twin)', 'der Lehrling (trainee)' ] },
+  { condition: 'Seasons', examples: [ 'der Herbst (fall)', 'der Winter (winter)' ] },
+  { condition: 'Precipitations', examples: [ 'der Regen (rain)', 'der Schnee (snow)' ] },
+  { condition: 'Date & Time Periods', examples: [ 'der Tag (day)', 'der Abend (evening)' ] },
+  { condition: 'Most -ling Endings', examples: [ 'der Zwilling (twin)', 'der Teigling (dough)' ] },
   { condition: 'Most -ich/-ig Endings', examples: [ 'der Teppich (rug)', 'der Pfirsich (peach)' ] },
   { condition: 'Most -er Endings', examples: [ 'der Bäcker (baker)', 'der Fahrer (driver)' ] },
-  { condition: 'Foreign words\nending in -us', examples: ['der Bonus (bonus)', 'der Campus (campus)'] },
-  { condition: 'Invitive verbs as nouns\nwithout -en', examples: ['der Hilfe (help)', 'der Arbeit (work)'] },
+  { condition: 'Foreign words ending in -us', examples: ['der Bonus (bonus)', 'der Bus (bus)'] },
+  { condition: 'Invitive verbs as nouns without -en', examples: ['der Hilfe (help)', 'der Arbeit (work)'] },
 ];
 
 const feminineRowData: GenderRowData[] = [
   { condition: 'Feminine People', examples: [ 'die Frau (woman)', 'die Mutter (mother)' ] },
   { condition: 'Numbers', examples: [ 'die Eins (one)', 'die Zwei (two)' ] },
   { condition: 'Most -ung Endings', examples: [ 'die Zeitung (paper)', 'die Leitung (cable)' ] },
-  { condition: 'Most -schaft Endings', examples: [ 'die Wirtschaft (economy)', 'die Botschaft (message)' ] },
+  { condition: 'Most -schaft Endings', examples: [ 'die Ortschaft (town)', 'die Herrschaft (rule)' ] },
   { condition: 'Most -ion Endings', examples: [ 'die Nation (nation)', 'die Aktion (action)' ] },
-  { condition: 'Most -heit/-keit Endings', examples: [ 'die Einheit (unity)', 'die Mehrheit (major)' ] },
-  { condition: 'Most -tät Endings', examples: [ 'die Qualität (quality)', 'die Identität (identity)' ] },
+  { condition: 'Most -heit/-keit Endings', examples: [ 'die Einheit (unity)', 'die Reinheit (purity)' ] },
+  { condition: 'Most -tät Endings', examples: [ 'die Parität (parity)', 'die Pietät (piety)' ] },
   { condition: 'Most -ik Endings', examples: [ 'die Musik (music)', 'die Logik (logic)' ] },
-  { condition: 'Most -ade/-age/-euse/\n-ere/-ie Endings', examples: [ 'die Fassade (front)', 'die Bühne (stage)' ] },
+  { condition: 'Most -ade/-age/-euse/-ere/-ie Endings', examples: [ 'die Fassade (front)', 'die Bühne (stage)' ] },
   { condition: 'Most -anz/-enz Endings', examples: [ 'die Distanz (gap)', 'die Lizenz (permit)' ] },
 ];
 
 const neuterRowData: GenderRowData[] = [
   { condition: 'Letters', examples: [ 'das A (A)', 'das R (R)' ] },
-  { condition: 'Most -chen Endings', examples: [ 'das Kätzchen (kitten)', 'das Hündchen (puppy)' ] },
+  { condition: 'Most -chen Endings', examples: [ 'das Kätzchen (kitten)', 'das Säuchen (piglet)' ] },
   { condition: 'Most -um Endings', examples: [ 'das Album (album)', 'das Vacuum (use)' ] },
-  { condition: 'Most -ment Endings', examples: [ 'das Element (element)', 'das Segment (segment)' ] },
+  { condition: 'Most -ment Endings', examples: [ 'das Zement (cement)', 'das Testament (will)' ] },
   { condition: 'Some Ge- Prefix', examples: [ 'das Gebet (prayer)', 'das Gedicht (poem)' ] },
-  { condition: 'Foreign words\nending in -ma', examples: [ 'das Karma (karma)', 'das Schema (scheme)' ] },
+  { condition: 'Foreign words ending in -ma', examples: [ 'das Karma (karma)', 'das Aroma (aroma)' ] },
   { condition: 'Invitive verbs as nouns', examples: ['das Lesen (reading)', 'das Lernen (learn)'] },
+];
+
+const genderSections = [
+  { label: 'MASCULINE', data: masculineRowData },
+  { label: 'FEMININE', data: feminineRowData },
+  { label: 'NEUTER', data: neuterRowData },
 ];
 
 const italicizeHyphen = (sentence: string): JSX.Element => (
@@ -60,60 +65,43 @@ export const DDDNote = () => (
       <table className='min-w-full text-xs'>
         <thead>
           <tr className='base-table-row border-t'>
-            <th className='base-table-heading-data'>Condition</th>
-            <th className='base-table-heading-data'>Examples</th>
+            <th className='base-table-heading-data w-[45%] text-left'>Condition</th>
+            <th className='base-table-heading-data text-left'>Examples</th>
           </tr>
         </thead>
         <tbody>
-          <tr className='base-table-row'>
-            <td colSpan={2} className='base-table-heading-data text-center'><b>MASCULINE</b></td>
-          </tr>
-          {masculineRowData.map((item, i) => (
-            <tr key={i} className='base-table-row'>
-              <td className={`base-table-data
-                ${item.condition.includes('\n') ? 'whitespace-pre-line' : ''}`}>
-                  {italicizeHyphen(item.condition)}
+          {genderSections.map(({ label, data }) => (
+            <React.Fragment key={label}>
+              <tr className='base-table-row'>
+                <td colSpan={2} className='base-table-heading-data text-center'>
+                  <b>{label}</b>
                 </td>
-              <td className="base-table-data whitespace-pre-line">
-                {item.examples.join('\n')}
-              </td>
-            </tr>
-          ))}
-          <tr className='base-table-row'>
-            <td colSpan={2} className='base-table-heading-data text-center'><b>FEMININE</b></td>
-          </tr>
-          {feminineRowData.map((item, i) => (
-            <tr key={i} className='base-table-row'>
-              <td className={`base-table-data 
-                ${item.condition.includes('\n') ? 'whitespace-pre-line' : ''}`}
-              >
-                {italicizeHyphen(item.condition)}
-              </td>
-              <td className="base-table-data whitespace-pre-line">
-                {item.examples.join('\n')}
-              </td>
-            </tr>
-          ))}
-          <tr className='base-table-row'>
-            <td colSpan={2} className='base-table-heading-data text-center'><b>NEUTER</b></td>
-          </tr>
-          {neuterRowData.map((item, i) => (
-            <tr key={i} className='base-table-row'>
-              <td className='base-table-data'>{italicizeHyphen(item.condition)}</td>
-              <td className="base-table-data whitespace-pre-line">
-                {item.examples.join('\n')}
-              </td>
-            </tr>
+              </tr>
+              {data.map((item, i) => (
+                <tr key={i} className='base-table-row'>
+                  <td className='w-[45%] pr-1 base-table-data break-words'>
+                    {italicizeHyphen(item.condition)}
+                  </td>
+                  <td className='base-table-data whitespace-pre-line'>
+                    {item.examples.join('\n')}
+                  </td>
+                </tr>
+              ))}
+            </React.Fragment>
           ))}
         </tbody>
       </table>
     </div>
-    <p className='text-[10px] italic'>Acknowledgement: <a 
-      href='https://grammatisch.com/en/bestimmter_artikel.html' 
-      target='_blank' 
-      rel='noopener noreferrer'
-      className='hover:text-brdr-goldBrdrTop transition-colors duration-200'
-    ><u>grammatisch.com</u>
-    </a></p>
+    <p className='text-[10px] italic'>
+      Acknowledgement:{' '}
+      <a
+        href='https://grammatisch.com/en/bestimmter_artikel.html'
+        target='_blank'
+        rel='noopener noreferrer'
+        className='hover:text-brdr-goldBrdrTop transition-colors duration-200'
+      >
+        <u>grammatisch.com</u>
+      </a>
+    </p>
   </div>
 );
