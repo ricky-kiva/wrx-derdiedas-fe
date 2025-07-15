@@ -16,7 +16,7 @@ export const LetterModal: React.FC<LetterModalProps> = ({ setShowModal, content 
   return (
     <div className='fixed inset-0 bg-black/40 flex items-center justify-center z-20'>
       <div className='relative w-3/4 md:w-1/2 lg:w-[29.15%] h-[81%] md:h-[75%] flex flex-col
-        bg-old-paper-texture-1 bg-cover rounded-2xl shadow-xl text-sm text-txt-black'
+        bg-bg-indigo bg-old-paper-texture-1 bg-cover rounded-2xl shadow-xl text-sm text-txt-black'
       >
         <div className='w-full flex justify-end px-6 pt-5'>
           <button 
