@@ -1,25 +1,47 @@
 import type { JSX } from 'react';
+import type { Gender } from '../../types/types';
 
-export const highlightGenderRules = (word: string): JSX.Element | string => {
-  const suffixRegex = /(ling|ich|ig|er|ung|schaft|ion|heit|keit|tät|ik|ade|age|euse|ere|ie|anz|enz|chen|um|ment)$/i;
+export const highlightGenderRules = (word: string, gender: Gender): JSX.Element | string => {
+  const suffixGroups: Record<Gender, RegExp> = {
+    masculine: /(ling|ich|ig|er|us)$/i,
+    feminine: /(ung|schaft|ion|heit|keit|tät|ik|ade|age|euse|ere|ie|anz|enz)$/i,
+    neuter: /(chen|um|ment|ma)$/i
+  };
 
-  const lower = word.toLowerCase();
+  const prefixGroup: Record<Gender, RegExp | null> = {
+    masculine: null,
+    feminine: null,
+    neuter: /^ge/i
+  };
 
-  if (lower === 'mädchen') return word;
+  const matchAndHighlight = (regex: RegExp | null, type: 'prefix' | 'suffix'): JSX.Element | null => {
+    if (!regex) return null;
 
-  const match = word.match(suffixRegex);
+    const match = word.match(regex);
+    if (!match) return null;
 
-  if (match) {
-    const suffix = match[0];
-    const base = word.slice(0, -suffix.length);
+    const part = match[0];
 
-    return (
-      <>
-        {base}
-        <span className='underline'>{suffix}</span>
-      </>
-    );
-  }
+    if (type === 'prefix') {
+      return (
+        <>
+          <span className='underline'>{part}</span>
+          {word.slice(part.length)}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {word.slice(0, -part.length)}
+          <span className='underline'>{part}</span>
+        </>
+      );
+    }
+  };
 
-  return word;
+  return (
+    matchAndHighlight(prefixGroup[gender], 'prefix')
+      ?? matchAndHighlight(suffixGroups[gender], 'suffix')
+      ?? word
+  );
 };

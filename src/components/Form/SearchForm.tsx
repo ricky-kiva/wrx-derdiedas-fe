@@ -76,7 +76,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
         <div className='relative w-full flex p-[1.5px] border-gold-color-only rounded-r-full'>
           {isSubmitted && gender && (
             <div className="absolute inset-0 flex items-center px-[0.875rem] text-bg-indigo pointer-events-none">
-              {highlightGenderRules(input)}
+              {highlightGenderRules(input, gender)}
             </div>
           )}
           <input 
