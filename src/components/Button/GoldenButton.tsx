@@ -1,4 +1,5 @@
 import React from 'react';
+import { GoldenFilledLabel } from '../Label';
 
 export interface GoldenButtonProps {
   text?: string;
@@ -21,18 +22,7 @@ export const GoldenButton: React.FC<GoldenButtonProps> = (props) => {
       className={`h-10 flex border-gold-color-only border-gold-hover rounded-full p-[1.5px] 
         ${isIconOnly ? 'aspect-square': hideTextOnMobile ? 'lg:aspect-auto aspect-square' : ''}`}
     >
-      <span className={`flex items-center bg-btn-gold rounded-full
-        ${ isIconOnly ? 'w-full h-full justify-center' : hideTextOnMobile
-          ? 'lg:gap-x-2 lg:px-5 gap-0 px-0 w-full h-full justify-center lg:justify-start'
-          : 'gap-x-2 px-5'}`
-      }>
-        {!isIconOnly && 
-          <span className={hideTextOnMobile ? 'hidden lg:inline' : 'inline'}>
-            {text}
-          </span>
-        }
-        {icon && React.createElement(icon, { className: "w-3 h-3 fill-bg-indigo" })}
-      </span>
+      <GoldenFilledLabel text={text} icon={icon} hideTextOnMobile={hideTextOnMobile} />
     </button>
   );
 };
