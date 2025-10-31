@@ -4,9 +4,10 @@ import LottieLoading from '../../assets/lottie/loading-1.json';
 import React, { useState } from 'react';
 import { getByWord } from '../../services/nouns';
 import { getGenderLabel, highlightGenderRules } from '../../utils/gender';
-import type { Gender, SearchNounItem } from '../../types/types';
+import type { Gender } from '../../types/shared/types';
 import { parseErrorMessage } from '../../utils/error';
 import Lottie from 'lottie-react';
+import type { SearchNounItem } from '../../types/search/types';
 
 interface SearchFormProps {
   gender: Gender | null;

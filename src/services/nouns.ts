@@ -1,6 +1,6 @@
 import axios from 'axios';
-import type { SearchNounResponse } from '../types/types';
 import config from '../commons/config';
+import type { SearchNounResponse } from '../types/search/types';
 
 export const getByWord = async (word: string) => {
   return axios.post<SearchNounResponse>(

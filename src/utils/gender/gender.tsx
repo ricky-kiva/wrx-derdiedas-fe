@@ -1,5 +1,5 @@
 import type { JSX } from 'react';
-import type { Gender } from '../../types/types';
+import type { Gender } from '../../types/shared/types';
 
 export const highlightGenderRules = (word: string, gender: Gender): JSX.Element | string => {
   const suffixGroups: Record<Gender, RegExp> = {

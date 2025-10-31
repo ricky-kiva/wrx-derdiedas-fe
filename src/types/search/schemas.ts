@@ -1,5 +1,5 @@
 import z from 'zod';
-import { GenderEnum, ResponseStatusEnum } from './enums';
+import { GenderEnum, ResponseStatusEnum } from '../shared/enums';
 
 export const NounSchema = z.object({
   id: z.string(),
