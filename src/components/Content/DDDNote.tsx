@@ -60,7 +60,7 @@ const italicizeHyphen = (sentence: string): JSX.Element => (
 export const DDDNote = () => (
   <div className='flex flex-col gap-4'>
     <p>German nouns have 3 genders, each with its own article: <b>der</b> (masculine), <b>die</b> (feminine), and <b>das</b> (neuter).</p>
-    <p>To remember a noun’s gender and use the correct article, learning general rules can help in most cases.</p>
+    <p>To remember a noun’s gender and use the correct article, <b>learning general rules</b> can help in most cases.</p>
     <div className='overflow-x-auto mt-2'>
       <table className='min-w-full text-xs'>
         <thead>
