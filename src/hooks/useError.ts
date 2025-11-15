@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 
 interface ErrorCtxType {
+  errorMsg: (string | null);
   setErrorMsg: (msg: string | null) => void;
 }
 
