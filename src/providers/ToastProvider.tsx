@@ -1,40 +1,40 @@
-import { ErrorContext } from '../hooks/useError';
+import { ToastContext } from '../hooks/useToast';
 import { JumpingToast } from '../components/Toast';
 import { useCallback, useRef, useState } from 'react';
 
-interface ErrorProviderProps {
+interface ToastProviderProps {
   children: React.ReactNode;
 }
 
-export const ErrorProvider: React.FC<ErrorProviderProps> = ({ children }) => {
-  const [errorMsg, _setErrorMsg] = useState<string | null>(null);
+export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
+  const [msg, setMsg] = useState<string | null>(null);
   
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const setErrorMsg = useCallback((msg: string | null) => {
-    _setErrorMsg(msg);
+  const setToast = useCallback((msg: string | null) => {
+    setMsg(msg);
 
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
 
-    _setErrorMsg(null);
+    setMsg(null);
 
     requestAnimationFrame(() => {
-      _setErrorMsg(msg);
+      setMsg(msg);
 
       timerRef.current = setTimeout(() => {
-        _setErrorMsg(null);
+        setMsg(null);
         timerRef.current = null;
       }, 2000);
     });
   }, []);
   
   return (
-    <ErrorContext.Provider value={{ errorMsg, setErrorMsg }}>
+    <ToastContext.Provider value={{ setToast, toastMsg: msg }}>
       {children}
       <JumpingToast />
-    </ErrorContext.Provider>
+    </ToastContext.Provider>
   );
 };

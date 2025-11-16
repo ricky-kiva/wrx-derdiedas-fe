@@ -3,7 +3,7 @@ import { login as loginSvc, logout as logoutSvc, refreshToken } from '../service
 import { AuthContext } from '../hooks/useAuth';
 import { setupReqAuthInterceptor, setupResAuthInterceptor } from '../lib/api/interceptor';
 import type { User } from '../types/user/types';
-import { useError } from '../hooks/useError';
+import { useToast } from '../hooks/useToast';
 import { googleLogout } from '@react-oauth/google';
 
 interface AuthProviderProps {
@@ -20,15 +20,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return stored ? JSON.parse(stored) : null;
   });
 
-  const { setErrorMsg } = useError();
+  const { setToast } = useToast();
 
   useEffect(() => {
     return setupReqAuthInterceptor(accessToken);
   }, [accessToken]);
 
   useEffect(() => {
-    return setupResAuthInterceptor(setAccessToken, setErrorMsg);
-  }, [setAccessToken, setErrorMsg]);
+    return setupResAuthInterceptor(setAccessToken, setToast);
+  }, [setAccessToken, setToast]);
 
   useEffect(() => {
     const hydrateAuth = async () => {
@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     hydrateAuth();
-  }, [setErrorMsg]);
+  }, [setToast]);
 
   const login = async (googleIdToken: string) => {
     setIsLoading(true);

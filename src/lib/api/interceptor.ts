@@ -14,7 +14,7 @@ export function setupReqAuthInterceptor(accessToken: (string | null)) {
 
 export function setupResAuthInterceptor(
   setAccessToken: ((token: (string | null)) => void),
-  setErrorMsg: (msg: (string | null)) => void
+  setToast: (msg: (string | null)) => void
 ) {
   const resInterceptor = api.interceptors.response.use(
     (res) => res,
@@ -36,7 +36,7 @@ export function setupResAuthInterceptor(
           return api(originalReq);
         } catch {
           setAccessToken(null);
-          setErrorMsg("Session has expired. Please log in again");
+          setToast("Session has expired. Please log in again");
         }
       }
 
