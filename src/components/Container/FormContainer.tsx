@@ -6,11 +6,7 @@ import { Matches } from '../Matches';
 import type { LetterModalContent } from '../Modal';
 import { useLocation } from 'react-router-dom';
 import type { SearchNounItem } from '../../types/search/types';
-<<<<<<< HEAD
 import { useToast } from '../../hooks/useToast';
-=======
-import { useError } from '../../hooks/useError';
->>>>>>> ff1a90d9c44afcc2a71a554591e3e72d10c1aff6
 import type { StartGameResponseData } from '../../types/game/types';
 
 interface FormContainerProps {
