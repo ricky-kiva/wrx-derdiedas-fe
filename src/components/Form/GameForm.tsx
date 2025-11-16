@@ -2,13 +2,12 @@ import { GoldenButton } from '../Button';
 import IconCheck from '../../assets/images/icon-check-1.svg?react';
 import LottieLoading from '../../assets/lottie/loading-1.json';
 import React, { useEffect, useState } from 'react';
-// import { parseErrorMessage } from '../../utils/error';
 import Lottie from 'lottie-react';
 import type { StartGameResponseData } from '../../types/game/types';
 import type { Gender } from '../../types/shared/types';
 import { answerGame, startGame as startGameSvc } from '../../services/game';
 import { useAuth } from '../../hooks/useAuth';
-import { useError } from '../../hooks/useError';
+import { useToast } from '../../hooks/useToast';
 
 interface GameFormProps {
   game: (StartGameResponseData | null);
@@ -22,7 +21,7 @@ export const GameForm: React.FC<GameFormProps> = (props) => {
   const [points, setPoints] = useState(0);
 
   const { user } = useAuth();
-  const { setErrorMsg } = useError();
+  const { setToast } = useToast();
 
   useEffect(() => {
     const startGame = async () => {
@@ -39,8 +38,8 @@ export const GameForm: React.FC<GameFormProps> = (props) => {
   }, [user?.id, setGame]);
 
   const handleCorrect = (isCorrect: boolean) => {
-    if (isCorrect) setErrorMsg("Correct! 🎉"); 
-    else setErrorMsg("Missed it! Let's retry 🙊");
+    if (isCorrect) setToast("Correct! 🎉"); 
+    else setToast("Missed it! Let's retry 🙊");
   };
 
   const handleAnswer = async (answer: Exclude<Gender, '?'>) => {
