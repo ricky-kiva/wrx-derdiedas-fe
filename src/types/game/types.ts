@@ -1,12 +1,22 @@
 import type z from 'zod';
-import type { GameAnswerResponseDataSchema, GameAnswerResponseSchema, GameAnswerPayloadSchema, StartGamePayloadSchema, StartGameResponseDataSchema, StartGameResponseSchema, EndGamePayloadSchema, EndGameResponseDataSchema, EndGameResponseSchema } from './schemas';
+import type { GameAnswerPayloadSchema, StartGamePayloadSchema, EndGamePayloadSchema } from './schemas';
+import type { Noun } from '../noun/types';
 
 export type GameAnswerPayload = z.infer<typeof GameAnswerPayloadSchema>;
-export type GameAnswerResponseData = z.infer<typeof GameAnswerResponseDataSchema>;
-export type GameAnswerResponse = z.infer<typeof GameAnswerResponseSchema>;
 export type StartGamePayload = z.infer<typeof StartGamePayloadSchema>;
-export type StartGameResponseData = z.infer<typeof StartGameResponseDataSchema>;
-export type StartGameResponse = z.infer<typeof StartGameResponseSchema>;
 export type EndGamePayload = z.infer<typeof EndGamePayloadSchema>;
-export type EndGameResponseData = z.infer<typeof EndGameResponseDataSchema>;
-export type EndGameResponse = z.infer<typeof EndGameResponseSchema>;
+
+export interface GameAnswerData {
+  correct: boolean;
+  currentScore: number;
+  nouns?: Omit<Noun, 'gender'>[];
+}
+
+export interface StartGameData {
+  gameId: string;
+  nouns: Omit<Noun, 'gender'>[];
+}
+
+export interface EndGameData {
+  userId: string;
+}
