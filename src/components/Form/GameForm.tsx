@@ -1,17 +1,17 @@
 import { GoldenButton } from '../Button';
 import IconCheck from '../../assets/images/icon-check-1.svg?react';
 import LottieLoading from '../../assets/lottie/loading-1.json';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Lottie from 'lottie-react';
-import type { StartGameResponseData } from '../../types/game/types';
+import type { StartGameData } from '../../types/game/types';
 import type { Gender } from '../../types/shared/types';
 import { answerGame, startGame as startGameSvc } from '../../services/game';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 
 interface GameFormProps {
-  game: (StartGameResponseData | null);
-  setGame: React.Dispatch<React.SetStateAction<StartGameResponseData | null>>;
+  game: (StartGameData | null);
+  setGame: React.Dispatch<React.SetStateAction<StartGameData | null>>;
 }
 
 export const GameForm: React.FC<GameFormProps> = (props) => {
@@ -23,19 +23,25 @@ export const GameForm: React.FC<GameFormProps> = (props) => {
   const { user } = useAuth();
   const { setToast } = useToast();
 
+  const gameStartedRef = useRef(false);
+
   useEffect(() => {
+    if (gameStartedRef.current) return;
+
+    gameStartedRef.current = true;
+
     const startGame = async () => {
       try {
         setIsLoading(true);
         const res = await startGameSvc({ userId: user?.id });
-        setGame(res.data.data);
+        if (res.data.status === 'success') setGame(res.data.data);
       } finally {
         setIsLoading(false);
       }
     };
     
     startGame();
-  }, [user?.id, setGame]);
+  }, [game, user?.id, setGame]);
 
   const handleCorrect = (isCorrect: boolean) => {
     if (isCorrect) setToast("Correct! 🎉"); 
@@ -54,21 +60,23 @@ export const GameForm: React.FC<GameFormProps> = (props) => {
           userId: user?.id
         });
 
-        const { correct, currentScore, nouns: nextNouns } = res.data.data;
+        if (res.data.status === 'success') {
+          const { correct, currentScore, nouns: nextNouns } = res.data.data;
 
-        setPoints(currentScore);
+          setPoints(currentScore);
 
-        setGame(prev => {
-          if (!prev) return prev;
-          return { 
-            ...prev, 
-            nouns: nextNouns 
-              ? nextNouns 
-              : prev.nouns.slice(1) 
-          };
-        });
+          setGame(prev => {
+            if (!prev) return prev;
+            return { 
+              ...prev, 
+              nouns: nextNouns 
+                ? nextNouns 
+                : prev.nouns.slice(1) 
+            };
+          });
 
-        handleCorrect(correct);
+          handleCorrect(correct);
+        }
       }
     } finally {
       setIsLoading(false);
