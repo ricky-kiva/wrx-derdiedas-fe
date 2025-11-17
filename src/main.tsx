@@ -13,7 +13,6 @@ createRoot(document.getElementById('root')!).render(
     <GoogleOAuthProvider clientId={config.clientId.google}>
       <ToastProvider>
         <AuthProvider>
-          
             <BrowserRouter>
               <App />
             </BrowserRouter>
