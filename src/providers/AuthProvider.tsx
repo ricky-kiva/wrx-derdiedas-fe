@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const hydrateAuth = async () => {
       try {
         const res = await refreshToken();
-        setAccessToken(res.data.data.accessToken);
+        if (res.data.status === 'success') setAccessToken(res.data.data.accessToken); 
       } catch {
         setAccessToken(null);
         setUser(null);
@@ -52,14 +52,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const res = await loginSvc({ googleIdToken });
 
-    const { accessToken, user } = res.data.data;
+    if (res.data.status === 'success') {
+      const { accessToken, user } = res.data.data;
 
-    setAccessToken(accessToken);
-    setUser(user);
+      setAccessToken(accessToken);
+      setUser(user);
 
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
 
-    setIsLoading(false);
+      setIsLoading(false);
+    }
   };
 
   const logout = async () => {

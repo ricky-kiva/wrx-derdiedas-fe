@@ -5,13 +5,13 @@ import { MeaningExcerpt } from '../Content';
 import { Matches } from '../Matches';
 import type { LetterModalContent } from '../Modal';
 import { useLocation } from 'react-router-dom';
-import type { SearchNounItem } from '../../types/search/types';
 import { useToast } from '../../hooks/useToast';
-import type { StartGameResponseData } from '../../types/game/types';
+import type { StartGameData } from '../../types/game/types';
+import type { SearchedNoun } from '../../types/noun/types';
 
 interface FormContainerProps {
-  game: (StartGameResponseData | null);
-  setGame: React.Dispatch<React.SetStateAction<StartGameResponseData | null>>;
+  game: (StartGameData | null);
+  setGame: React.Dispatch<React.SetStateAction<StartGameData | null>>;
   setModalContent: React.Dispatch<React.SetStateAction<LetterModalContent | undefined>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -19,7 +19,7 @@ interface FormContainerProps {
 export const FormContainer: React.FC<FormContainerProps> = (props) => {
   const { game, setGame, setShowModal, setModalContent } = props;
 
-  const [data, setData] = useState<SearchNounItem[] | null>(null);
+  const [data, setData] = useState<SearchedNoun[] | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [firstItemGender, setFirstItemGender] = useState<Gender | null>(null);
   const [formInput, setFormInput] = useState('');

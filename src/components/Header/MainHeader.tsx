@@ -14,11 +14,11 @@ import type { GoldenNavProps } from '../Nav/GoldenNav';
 import { useAuth } from '../../hooks/useAuth';
 import { formatDisplayUsername } from '../../utils/styler';
 import { endGame } from '../../services/game';
-import type { StartGameResponseData } from '../../types/game/types';
+import type { StartGameData } from '../../types/game/types';
 
 interface MainHeaderProps {
-  game: (StartGameResponseData | null);
-  setGame: React.Dispatch<React.SetStateAction<StartGameResponseData | null>>;
+  game: (StartGameData | null);
+  setGame: React.Dispatch<React.SetStateAction<StartGameData | null>>;
   setModalContent: React.Dispatch<React.SetStateAction<LetterModalContent | undefined>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -45,10 +45,11 @@ export const MainHeader: React.FC<MainHeaderProps> = (props) => {
     (!isGameRoute 
       ? { to: '/game', text: 'Play', icon: IconGamepad, hideTextOnMobile: true }
       : { to: '/', text: 'Search', icon: IconMagnifyingGlass, hideTextOnMobile: true, onClick: (game 
-          ? () => {
-            endGame({ gameId: game.gameId });
+          ? async () => {
+            await endGame({ gameId: game.gameId });
+            console.log(`deleted gameId: ${game.gameId}`);
             setGame(null);
-          } 
+          }
           : (() => {})) 
         }),
     ...(user 

@@ -7,12 +7,12 @@ import { getGenderLabel, highlightGenderRules } from '../../utils/gender';
 import type { Gender } from '../../types/shared/types';
 import { parseErrorMessage } from '../../utils/error';
 import Lottie from 'lottie-react';
-import type { SearchNounItem } from '../../types/search/types';
+import type { SearchedNoun } from '../../types/noun/types';
 
 interface SearchFormProps {
   gender: Gender | null;
   input: string;
-  setData: React.Dispatch<React.SetStateAction<SearchNounItem[] | null>>;
+  setData: React.Dispatch<React.SetStateAction<SearchedNoun[] | null>>;
   setGender: React.Dispatch<React.SetStateAction<Gender | null>>;
   setInput: React.Dispatch<React.SetStateAction<string>>;
   setErrorMsg: React.Dispatch<React.SetStateAction<string | null>>;
@@ -44,17 +44,20 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
     try {
       const res = await getByWord(input);
 
-      const data = res.data.data;
+      if (res.data.status === 'success') {
+        const data = res.data.data;
 
-      if (data.length === 0) {
-        displayErrorMsg('Couldn\'t find that word!');
-        return;
+        if (data.length === 0) {
+          displayErrorMsg('Couldn\'t find that word!');
+          return;
+        }
+
+        setInput(data[0].item.word);
+        setGender(data[0].item.gender);
+        setData(data);
+        setIsSubmitted(true);
       }
-
-      setInput(data[0].item.word);
-      setGender(data[0].item.gender);
-      setData(data);
-      setIsSubmitted(true);
+      
     } catch (e: unknown) {
       displayErrorMsg(e);
     } finally {
