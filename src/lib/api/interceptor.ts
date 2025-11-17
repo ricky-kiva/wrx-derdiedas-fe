@@ -2,6 +2,8 @@ import type { AxiosError } from 'axios';
 import { api } from './api';
 import type { RetriableAxiosRequestConfig } from './types';
 import { refreshToken } from '../../services/auth';
+import { isApiResponse } from '../../types/shared/validators';
+import { parseErrorMessage } from '../../utils/error';
 
 export function setupReqAuthInterceptor(accessToken: (string | null)) {
   const reqInterceptor = api.interceptors.request.use((config) => {
@@ -26,14 +28,17 @@ export function setupResAuthInterceptor(
 
         try {
           const refreshRes = await refreshToken();
-          const newToken = refreshRes.data.data.accessToken;
 
-          setAccessToken(newToken);
+          if (refreshRes.data.status === 'success') {
+            const newToken = refreshRes.data.data.accessToken;
 
-          originalReq.headers = originalReq.headers || {};
-          originalReq.headers.Authorization = `Bearer ${newToken}`;
+            setAccessToken(newToken);
 
-          return api(originalReq);
+            originalReq.headers = originalReq.headers || {};
+            originalReq.headers.Authorization = `Bearer ${newToken}`;
+
+            return api(originalReq);
+          }
         } catch {
           setAccessToken(null);
           setToast("Session has expired. Please log in again");
@@ -45,4 +50,31 @@ export function setupResAuthInterceptor(
   );
 
   return () => api.interceptors.response.eject(resInterceptor);
+}
+
+export function setupResErrorInterceptor(setToast: (msg: (string | null)) => void) {
+  api.interceptors.response.use(
+    (res) => {
+      const body = res.data;
+
+      if (!isApiResponse(body)) {
+        const err = new Error('Malformed API response');
+
+        setToast(err.message);
+
+        return Promise.reject(err);
+      }
+
+      if (body.status !== 'success') setToast(body.message);
+      
+      return res;
+    },
+    (err: AxiosError) => {
+      const msg = parseErrorMessage(err);
+
+      setToast(msg);
+      
+      return Promise.reject(err);
+    }
+  );
 }
