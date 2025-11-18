@@ -20,17 +20,12 @@ export const GoogleLoginButton: React.FC = () => {
   }, []);
   
   const handleSuccess = async (credRes: CredentialResponse) => {
-    try {
-      if (!credRes.credential) {
-        setToast('Login Error: Missing Google ID token');
-        return;
-      }
-
-      await login(credRes.credential);
-    } catch(e: unknown) {
-      if (e instanceof Error) setToast(`Login Error: ${e.message}`);
-      else setToast("Login failed");
+    if (!credRes.credential) {
+      setToast('Login Error: Missing Google ID token');
+      return;
     }
+
+    await login(credRes.credential);
   };
 
   return <GoogleLogin 
