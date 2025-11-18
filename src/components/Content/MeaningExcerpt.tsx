@@ -1,22 +1,22 @@
-import type { LetterModalContent } from '../Modal';
+import { useModal } from '../../hooks/useModal';
 
 interface MeaningExcerptProps {
   meanings?: string[];
-  setModalContent: React.Dispatch<React.SetStateAction<LetterModalContent | undefined>>;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings, setModalContent, setShowModal }) => {
+export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings }) => {
+  const { openModal } = useModal();
+
   if (!meanings || meanings.length === 0) return null;
 
-  const previewCount = 3;
-  const showSeeAll = meanings.length > previewCount;
+  const PREVIEW_COUNT = 3;
+  const SHOW_SEE_ALL = meanings.length > PREVIEW_COUNT;
 
   const joinMeanings = (arr: string[]) => arr
     .map(m => m[0].toUpperCase() + m.slice(1))
     .join(' • ');
 
-  const meaningsPreview = joinMeanings(meanings.slice(0, previewCount));
+  const meaningsPreview = joinMeanings(meanings.slice(0, PREVIEW_COUNT));
   const meaningsFull = (
     <ul className="list-disc list-inside">
       {meanings.map((m, i) => (
@@ -30,20 +30,14 @@ export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings, setMod
       <h3>MEANINGS</h3>
       <p>
         { meaningsPreview }
-        { showSeeAll && (
+        { SHOW_SEE_ALL && (
           <>
             {' • '}
             <button
               className='underline duration-300 hover:shadow-out-a-gold hover:text-shadow-a-gold'
               type='button'
               aria-label='See all meanings'
-              onClick={() => {
-                setShowModal(true);
-                setModalContent({
-                  title: 'MEANINGS',
-                  body: meaningsFull
-                });
-              }}>
+              onClick={ () => openModal({ title: 'MEANINGS', body: meaningsFull }) }>
               See All
             </button>
           </>

@@ -7,7 +7,6 @@ import IconLogout from '../../assets/images/icon-logout-1.svg?react';
 import IconMagnifyingGlass from '../../assets/images/icon-magnifying-glass-1.svg?react';
 import HeaderMenu from './HeaderMenu';
 import { GoogleLoginButton, type GoldenButtonProps } from '../Button';
-import type { LetterModalContent } from '../Modal';
 import { DDDNote } from '../Content';
 import { Link, useLocation } from 'react-router-dom';
 import type { GoldenNavProps } from '../Nav/GoldenNav';
@@ -15,18 +14,18 @@ import { useAuth } from '../../hooks/useAuth';
 import { formatDisplayUsername } from '../../utils/styler';
 import { endGame } from '../../services/game';
 import type { StartGameData } from '../../types/game/types';
+import { useModal } from '../../hooks/useModal';
 
 interface MainHeaderProps {
   game: (StartGameData | null);
   setGame: React.Dispatch<React.SetStateAction<StartGameData | null>>;
-  setModalContent: React.Dispatch<React.SetStateAction<LetterModalContent | undefined>>;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const MainHeader: React.FC<MainHeaderProps> = (props) => {
-  const { game, setGame, setModalContent, setShowModal } = props;
+  const { game, setGame } = props;
 
   const { user, logout } = useAuth();
+  const { openModal } = useModal();
 
   const location = useLocation();
 
@@ -35,8 +34,7 @@ export const MainHeader: React.FC<MainHeaderProps> = (props) => {
 
   const navItemProps: (GoldenButtonProps | GoldenNavProps)[] = [
     { icon: IconBook, label: 'Note for DerDieDas', onClick: (() => {
-      setShowModal(true); 
-      setModalContent({ 
+      openModal({ 
         title: 'NOTE ON DERDIEDAS',
         body: <DDDNote />
       });

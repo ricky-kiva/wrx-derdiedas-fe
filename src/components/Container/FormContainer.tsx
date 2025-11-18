@@ -3,7 +3,6 @@ import type { Gender } from '../../types/shared/types';
 import { GameForm, SearchForm } from '../Form';
 import { MeaningExcerpt } from '../Content';
 import { Matches } from '../Matches';
-import type { LetterModalContent } from '../Modal';
 import { useLocation } from 'react-router-dom';
 import type { StartGameData } from '../../types/game/types';
 import type { SearchedNoun } from '../../types/noun/types';
@@ -11,12 +10,10 @@ import type { SearchedNoun } from '../../types/noun/types';
 interface FormContainerProps {
   game: (StartGameData | null);
   setGame: React.Dispatch<React.SetStateAction<StartGameData | null>>;
-  setModalContent: React.Dispatch<React.SetStateAction<LetterModalContent | undefined>>;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const FormContainer: React.FC<FormContainerProps> = (props) => {
-  const { game, setGame, setShowModal, setModalContent } = props;
+  const { game, setGame } = props;
 
   const [data, setData] = useState<SearchedNoun[] | null>(null);
   const [firstItemGender, setFirstItemGender] = useState<Gender | null>(null);
@@ -59,11 +56,7 @@ export const FormContainer: React.FC<FormContainerProps> = (props) => {
         <div className="absolute top-[calc(100%+1.5rem)] w-full flex flex-col gap-y-5
           px-6"
         >
-          <MeaningExcerpt 
-            meanings={data?.[0]?.item.meanings} 
-            setShowModal={setShowModal}
-            setModalContent={setModalContent} 
-          />
+          <MeaningExcerpt meanings={data?.[0]?.item.meanings} />
           { !isGameRoute && <Matches 
             matchesData={data 
               ? data.map(d => ({ id: d.item.id, word: d.item.word })) 
