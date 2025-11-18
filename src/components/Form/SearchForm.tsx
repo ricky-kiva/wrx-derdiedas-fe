@@ -5,9 +5,9 @@ import React, { useState } from 'react';
 import { getByWord } from '../../services/nouns';
 import { getGenderLabel, highlightGenderRules } from '../../utils/gender';
 import type { Gender } from '../../types/shared/types';
-import { parseErrorMessage } from '../../utils/error';
 import Lottie from 'lottie-react';
 import type { SearchedNoun } from '../../types/noun/types';
+import { useToast } from '../../hooks/useToast';
 
 interface SearchFormProps {
   gender: Gender | null;
@@ -15,27 +15,27 @@ interface SearchFormProps {
   setData: React.Dispatch<React.SetStateAction<SearchedNoun[] | null>>;
   setGender: React.Dispatch<React.SetStateAction<Gender | null>>;
   setInput: React.Dispatch<React.SetStateAction<string>>;
-  setErrorMsg: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export const SearchForm: React.FC<SearchFormProps> = (props) => {
+  const { gender, input, setData, setGender, setInput } = props;
+
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { gender, input, setData, setGender, setInput, setErrorMsg } = props;
-
-  const displayErrorMsg = (e: unknown) => {
-    setErrorMsg(parseErrorMessage(e));
-    setTimeout(() => setErrorMsg(null), 2000);
-    setData(null);
-    setGender(null);
-  };
+  const { setToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const resetFormData = () => {
+      setData(null);
+      setGender(null);
+    };
+
     if (!input) {
-      displayErrorMsg('Hey, you forgot to type a word!');
+      setToast('Hey, you forgot to type a word!');
+      resetFormData();
       return;
     }
 
@@ -48,7 +48,8 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
         const data = res.data.data;
 
         if (data.length === 0) {
-          displayErrorMsg('Couldn\'t find that word!');
+          setToast('Couldn\'t find that word!');
+          resetFormData();
           return;
         }
 
@@ -57,9 +58,8 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
         setData(data);
         setIsSubmitted(true);
       }
-      
-    } catch (e: unknown) {
-      displayErrorMsg(e);
+    } catch {
+      resetFormData();
     } finally {
       setIsLoading(false);
     };

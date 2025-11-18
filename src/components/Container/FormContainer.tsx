@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { Gender } from '../../types/shared/types';
 import { GameForm, SearchForm } from '../Form';
 import { MeaningExcerpt } from '../Content';
 import { Matches } from '../Matches';
 import type { LetterModalContent } from '../Modal';
 import { useLocation } from 'react-router-dom';
-import { useToast } from '../../hooks/useToast';
 import type { StartGameData } from '../../types/game/types';
 import type { SearchedNoun } from '../../types/noun/types';
 
@@ -20,19 +19,12 @@ export const FormContainer: React.FC<FormContainerProps> = (props) => {
   const { game, setGame, setShowModal, setModalContent } = props;
 
   const [data, setData] = useState<SearchedNoun[] | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [firstItemGender, setFirstItemGender] = useState<Gender | null>(null);
   const [formInput, setFormInput] = useState('');
-
-  const { setToast } = useToast();
 
   const location = useLocation();
   const pathName = location.pathname;
   const isGameRoute = pathName.startsWith('/game');
-
-  useEffect(() => {
-    setToast(errorMsg);
-  }, [errorMsg, setToast]);
 
   const handleMatchClick = (word: string) => {
     if (!data) return;
@@ -53,13 +45,15 @@ export const FormContainer: React.FC<FormContainerProps> = (props) => {
     >
       <div className="relative w-full">
         { isGameRoute 
-          ? <GameForm game={game} setGame={setGame} />
+          ? <GameForm 
+            game={game} 
+            setGame={setGame} 
+          />
           : <SearchForm 
             gender={firstItemGender}
             input={formInput}
             setGender={setFirstItemGender}
             setData={setData} 
-            setErrorMsg={setErrorMsg}
             setInput={setFormInput} 
           /> }
         <div className="absolute top-[calc(100%+1.5rem)] w-full flex flex-col gap-y-5
