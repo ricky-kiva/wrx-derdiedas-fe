@@ -6,11 +6,11 @@ export interface LetterModalContent {
 }
 
 interface LetterModalProps {
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose: () => void;
   content?: LetterModalContent;
 }
 
-export const LetterModal: React.FC<LetterModalProps> = ({ setShowModal, content }) => {
+export const LetterModal: React.FC<LetterModalProps> = ({ onClose, content }) => {
   if (content === undefined) return null;
 
   return (
@@ -23,7 +23,7 @@ export const LetterModal: React.FC<LetterModalProps> = ({ setShowModal, content 
             className='hover:text-brdr-goldBrdrTop transition-colors duration-200'
             type='button'
             aria-label='Close Modal Box'
-            onClick={() => setShowModal(false)}
+            onClick={onClose}
           >
             x
           </button>
