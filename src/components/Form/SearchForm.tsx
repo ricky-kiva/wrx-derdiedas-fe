@@ -1,13 +1,15 @@
 import { GoldenButton } from '../Button';
 import IconMagnifyingGlass from '../../assets/images/icon-magnifying-glass-1.svg?react';
 import LottieLoading from '../../assets/lottie/loading-1.json';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getByWord } from '../../services/nouns';
 import { getGenderLabel, highlightGenderRules } from '../../utils/gender';
 import type { Gender } from '../../types/shared/types';
 import Lottie from 'lottie-react';
 import type { SearchedNoun } from '../../types/noun/types';
 import { useToast } from '../../hooks/useToast';
+import { LocalStorageTokens } from '../../commons/LocalStorageTokens';
+import { endGame as endGameSvc } from '../../services/game';
 
 interface SearchFormProps {
   gender: Gender | null;
@@ -24,6 +26,26 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { setToast } = useToast();
+
+  const gameTerminatedRef = useRef(false);
+
+  useEffect(() => {
+    if (gameTerminatedRef.current) return;
+
+    gameTerminatedRef.current = true;
+
+    const endGame = async () => {
+      const gameId = localStorage.getItem(LocalStorageTokens.GAME_ID);
+      
+      if (gameId) {
+        await endGameSvc(gameId);
+        localStorage.removeItem(LocalStorageTokens.GAME_ID);
+        setToast('Game ended. Points are saved! 🎯');
+      };
+    };
+
+    endGame();
+  }, [setToast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
