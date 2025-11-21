@@ -1,9 +1,9 @@
 import type { AxiosError } from 'axios';
 import { api } from './api';
-import type { RetriableAxiosRequestConfig } from './types';
 import { refreshToken } from '../../services/auth';
 import { isApiResponse } from '../../types/shared/validators';
 import { parseErrorMessage } from '../../utils/error';
+import type { CustomAxiosRequestConfig } from './types';
 
 export function setupReqAuthInterceptor(accessToken: (string | null)) {
   const reqInterceptor = api.interceptors.request.use((config) => {
@@ -23,7 +23,7 @@ export function setupResAuthInterceptor(
     async (e: AxiosError) => {
       const REFRESH_URL = '/auth/refresh-token';
 
-      const originalReq = e.config as RetriableAxiosRequestConfig;
+      const originalReq = e.config as CustomAxiosRequestConfig;
 
       if (e.response?.status === 401 
         && !originalReq._retry 
@@ -60,26 +60,28 @@ export function setupResAuthInterceptor(
 export function setupResErrorInterceptor(setToast: (msg: (string | null)) => void) {
   api.interceptors.response.use(
     (res) => {
+      const config = res.config as CustomAxiosRequestConfig;
       const body = res.data;
 
       if (!isApiResponse(body)) {
         const err = new Error('Malformed API response');
 
-        setToast(err.message);
+        if (!config._silent) setToast(err.message);
 
         return Promise.reject(err);
       }
 
-      if (body.status !== 'success') setToast(body.message);
+      if (body.status !== 'success' && !config._silent) setToast(body.message);
       
       return res;
     },
-    (err: AxiosError) => {
-      const msg = parseErrorMessage(err);
+    (e: AxiosError) => {
+      const config = e.config as CustomAxiosRequestConfig;
+      const msg = parseErrorMessage(e);
 
-      setToast(msg);
+      if (!config._silent) setToast(msg);
       
-      return Promise.reject(err);
+      return Promise.reject(e);
     }
   );
 }

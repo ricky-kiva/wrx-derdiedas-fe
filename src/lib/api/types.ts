@@ -1,5 +1,6 @@
 import type { AxiosRequestConfig } from 'axios';
 
-export interface RetriableAxiosRequestConfig extends AxiosRequestConfig {
+export interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
+  _silent?: boolean
 }
