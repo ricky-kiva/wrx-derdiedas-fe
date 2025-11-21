@@ -21,9 +21,14 @@ export function setupResAuthInterceptor(
   const resInterceptor = api.interceptors.response.use(
     (res) => res,
     async (e: AxiosError) => {
+      const REFRESH_URL = '/auth/refresh-token';
+
       const originalReq = e.config as RetriableAxiosRequestConfig;
 
-      if (e.response?.status === 401 && !originalReq._retry) {
+      if (e.response?.status === 401 
+        && !originalReq._retry 
+        && !originalReq.url?.includes(REFRESH_URL)
+      ) {
         originalReq._retry = true;
 
         try {

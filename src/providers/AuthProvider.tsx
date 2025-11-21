@@ -5,18 +5,17 @@ import { setupReqAuthInterceptor, setupResAuthInterceptor } from '../lib/api/int
 import type { User } from '../types/user/types';
 import { useToast } from '../hooks/useToast';
 import { googleLogout } from '@react-oauth/google';
+import { LocalStorageTokens } from '../commons/LocalStorageTokens';
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-const USER_STORAGE_KEY = 'user_info';
-
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User | null>(() => {
-    const stored = localStorage.getItem(USER_STORAGE_KEY);
+    const stored = localStorage.getItem(LocalStorageTokens.USER_INFO);
     return stored ? JSON.parse(stored) : null;
   });
 
@@ -28,7 +27,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     return setupResAuthInterceptor(setAccessToken, setToast);
-  }, [setAccessToken, setToast]);
+  }, [setToast]);
 
   useEffect(() => {
     const hydrateAuth = async () => {
@@ -38,14 +37,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } catch {
         setAccessToken(null);
         setUser(null);
-        localStorage.removeItem(USER_STORAGE_KEY);
+        localStorage.removeItem(LocalStorageTokens.USER_INFO);
       } finally {
         setIsLoading(false);
       }
     };
 
     hydrateAuth();
-  }, [setToast]);
+  }, []);
 
   const login = async (googleIdToken: string) => {
     setIsLoading(true);
@@ -58,7 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setAccessToken(accessToken);
       setUser(user);
 
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+      localStorage.setItem(LocalStorageTokens.USER_INFO, JSON.stringify(user));
 
       setIsLoading(false);
     }
@@ -73,7 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } finally {
         setAccessToken(null);
         setUser(null);
-        localStorage.removeItem(USER_STORAGE_KEY);
+        localStorage.removeItem(LocalStorageTokens.USER_INFO);
         setIsLoading(false);
       }
     }
