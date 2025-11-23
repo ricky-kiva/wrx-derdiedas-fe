@@ -1,7 +1,6 @@
 import type { AxiosError } from 'axios';
 import { api } from './api';
 import { refreshToken } from '../../services/auth';
-import { isApiResponse } from '../../types/shared/validators';
 import { parseErrorMessage } from '../../utils/error';
 import type { CustomAxiosRequestConfig } from './types';
 
@@ -25,10 +24,7 @@ export function setupResAuthInterceptor(
 
       const originalReq = e.config as CustomAxiosRequestConfig;
 
-      if (e.response?.status === 401 
-        && !originalReq._retry 
-        && !originalReq.url?.includes(REFRESH_URL)
-      ) {
+      if (!originalReq._retry && !originalReq.url?.includes(REFRESH_URL)) {
         originalReq._retry = true;
 
         try {
@@ -43,6 +39,9 @@ export function setupResAuthInterceptor(
             originalReq.headers.Authorization = `Bearer ${newToken}`;
 
             return api(originalReq);
+          } else {
+            setAccessToken(null);
+            setToast("Session has expired. Please log in again");
           }
         } catch {
           setAccessToken(null);
@@ -63,15 +62,7 @@ export function setupResErrorInterceptor(setToast: (msg: (string | null)) => voi
       const config = res.config as CustomAxiosRequestConfig;
       const body = res.data;
 
-      if (!isApiResponse(body)) {
-        const err = new Error('Malformed API response');
-
-        if (!config._silent) setToast(err.message);
-
-        return Promise.reject(err);
-      }
-
-      if (body.status !== 'success' && !config._silent) setToast(body.message);
+      if (body.status === 'error' && !config._silent) setToast(body.message);
       
       return res;
     },
