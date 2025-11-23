@@ -6,6 +6,8 @@ import type { User } from '../types/user/types';
 import { useToast } from '../hooks/useToast';
 import { googleLogout } from '@react-oauth/google';
 import { LocalStorageTokens } from '../commons/LocalStorageTokens';
+import { endGame, updateGame } from '../services/game';
+import { useGameStore } from '../hooks/useGameStore';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -20,6 +22,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   });
 
   const { setToast } = useToast();
+
+  const gameId = useGameStore(s => s.gameId);
 
   useEffect(() => {
     return setupReqAuthInterceptor(accessToken);
@@ -46,7 +50,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     hydrateAuth();
   }, []);
 
-  const login = async (googleIdToken: string) => {
+  const login = async (googleIdToken: string, fromGame?: boolean) => {
     setIsLoading(true);
 
     const res = await loginSvc({ googleIdToken });
@@ -58,6 +62,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(user);
 
       localStorage.setItem(LocalStorageTokens.USER_INFO, JSON.stringify(user));
+
+      setToast('Logged in. Hi! 👋');
+
+      if (fromGame) {
+        if (gameId) {
+          await updateGame(gameId, { userId: user.id });
+
+          const endRes = await endGame(gameId);
+          
+          if (endRes.data.status === 'success') {
+            if (!endRes.data.data.userId) setToast('Game ended. Your 0 points were not saved 😞');
+            else setToast('Game ended. Points are saved! 🎯');
+            
+            localStorage.removeItem(LocalStorageTokens.GAME_ID);
+          } 
+        }
+      }
 
       setIsLoading(false);
     }

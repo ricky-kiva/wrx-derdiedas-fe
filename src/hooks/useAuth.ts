@@ -5,7 +5,7 @@ interface AuthCtxType {
   accessToken: (string | null);
   isLoading: boolean;
   user: (User | null);
-  login: (googleIdToken: string) => Promise<void>;
+  login: (googleIdToken: string, fromGame?: boolean) => Promise<void>;
   logout: () => Promise<void>;
 }
 
