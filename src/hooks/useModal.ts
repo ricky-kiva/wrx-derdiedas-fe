@@ -1,8 +1,12 @@
 import { createContext, useContext } from 'react';
 import type { LetterModalContent } from '../components/Modal';
 
+export interface OpenModalOptions {
+  compact?: boolean;
+}
+
 type ModalCtxType = {
-  openModal: (content: LetterModalContent) => void;
+  openModal: (content: LetterModalContent, options?: OpenModalOptions) => void;
   closeModal: () => void;
 }
 
