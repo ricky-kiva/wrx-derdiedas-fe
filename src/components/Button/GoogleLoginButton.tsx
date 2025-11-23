@@ -2,12 +2,23 @@ import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useModal } from '../../hooks/useModal';
 
-export const GoogleLoginButton: React.FC = () => {
+interface GoogleLoginButtonProps {
+  fromGame?: boolean
+}
+
+export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = (props) => {
+  const { fromGame=false } = props;
+
   const [isCompact, setIsCompact] = useState(false);
 
   const { login } = useAuth();
   const { setToast } = useToast();
+  const { closeModal } = useModal();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const updateType = () => { setIsCompact(window.innerWidth < 1024); };
@@ -25,7 +36,12 @@ export const GoogleLoginButton: React.FC = () => {
       return;
     }
 
-    await login(credRes.credential);
+    await login(credRes.credential, fromGame);
+
+    if (fromGame) {
+      closeModal();
+      navigate('/');
+    }
   };
 
   return <GoogleLogin 
