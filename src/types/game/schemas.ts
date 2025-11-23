@@ -14,3 +14,7 @@ export const GameAnswerPayloadSchema = z.object({
 export const StartGamePayloadSchema = z.object({
   userId: z.string().optional()
 });
+
+export const UpdateGamePayloadSchema = z.object({
+  userId: z.string().optional()
+});
