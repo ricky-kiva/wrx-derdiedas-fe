@@ -11,16 +11,16 @@ import { ModalProvider } from './providers/ModalProvider.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId={config.clientId.google}>
-      <ToastProvider>
-        <AuthProvider>
-          <ModalProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </ModalProvider>
-        </AuthProvider>
-      </ToastProvider>
-    </GoogleOAuthProvider>
+    <ToastProvider>
+      <BrowserRouter>
+        <GoogleOAuthProvider clientId={config.clientId.google}>
+            <AuthProvider>
+              <ModalProvider>
+                <App />
+              </ModalProvider>
+            </AuthProvider>
+        </GoogleOAuthProvider>
+      </BrowserRouter>
+    </ToastProvider>
   </StrictMode>,
 );
