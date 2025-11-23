@@ -3,45 +3,77 @@ import IconCheck from '../../assets/images/icon-check-1.svg?react';
 import LottieLoading from '../../assets/lottie/loading-1.json';
 import React, { useEffect, useRef, useState } from 'react';
 import Lottie from 'lottie-react';
-import type { StartGameData } from '../../types/game/types';
 import type { Gender } from '../../types/shared/types';
-import { answerGame, startGame as startGameSvc } from '../../services/game';
+import { answerGame, endGame, getGame, startGame } from '../../services/game';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
+import { LocalStorageTokens } from '../../commons/LocalStorageTokens';
+import { useGameStore } from '../../hooks/useGameStore';
+import { useNavigate } from 'react-router-dom';
+import { useModal } from '../../hooks/useModal';
+import { GuestSubmitGameStep } from '../Content';
 
-interface GameFormProps {
-  game: (StartGameData | null);
-  setGame: React.Dispatch<React.SetStateAction<StartGameData | null>>;
-}
-
-export const GameForm: React.FC<GameFormProps> = (props) => {
-  const { game, setGame } = props;
-
+export const GameForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [points, setPoints] = useState(0);
 
+  const gameStartedRef = useRef(false);
+  
   const { user } = useAuth();
   const { setToast } = useToast();
+  const { openModal } = useModal();
+  
+  const gameId = useGameStore(s => s.gameId);
+  const nouns = useGameStore(s => s.nouns);
+  const setGameId = useGameStore(s => s.setGameId);
+  const setNouns = useGameStore(s => s.setNouns);
 
-  const gameStartedRef = useRef(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (gameStartedRef.current) return;
 
     gameStartedRef.current = true;
 
-    const startGame = async () => {
+    const initGame = async () => {
+      setIsLoading(true);
+      
       try {
-        setIsLoading(true);
-        const res = await startGameSvc({ userId: user?.id });
-        if (res.data.status === 'success') setGame(res.data.data);
+        let gameData;
+
+        const localGameId = localStorage.getItem(LocalStorageTokens.GAME_ID);
+
+        if (localGameId) {
+          try {
+            const res = await getGame(localGameId, { _silent: true });
+
+            if (res.data.status === 'success') {
+              gameData = res.data.data;
+              setPoints(res.data.data.points);
+            }
+          } catch { void 0; }
+        }
+
+        if (!gameData) {
+          const res = await startGame({ userId: user?.id });
+
+          if (res.data.status === 'success') {
+            gameData = res.data.data;
+            localStorage.setItem(LocalStorageTokens.GAME_ID, gameData.id);
+          }
+        }
+
+        if (gameData) {
+          setGameId(gameData.id);
+          setNouns(gameData.nouns);
+        }
       } finally {
         setIsLoading(false);
       }
     };
     
-    startGame();
-  }, [game, user?.id, setGame]);
+    initGame();
+  }, [setNouns, setGameId, user?.id]);
 
   const handleCorrect = (isCorrect: boolean) => {
     if (isCorrect) setToast("Correct! 🎉"); 
@@ -52,11 +84,10 @@ export const GameForm: React.FC<GameFormProps> = (props) => {
     try {
       setIsLoading(true);
 
-      if (game !== null) {
-        const res = await answerGame({
+      if (gameId !== null) {
+        const res = await answerGame(gameId, {
           answer,
-          gameId: game?.gameId,
-          nounId: game?.nouns?.[0]?.id,
+          nounId: nouns[0].id,
           userId: user?.id
         });
 
@@ -64,23 +95,30 @@ export const GameForm: React.FC<GameFormProps> = (props) => {
           const { correct, currentScore, nouns: nextNouns } = res.data.data;
 
           setPoints(currentScore);
-
-          setGame(prev => {
-            if (!prev) return prev;
-            return { 
-              ...prev, 
-              nouns: nextNouns 
-                ? nextNouns 
-                : prev.nouns.slice(1) 
-            };
-          });
-
+          setNouns(nextNouns ? nextNouns : nouns.slice(1));
           handleCorrect(correct);
         }
       }
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleDone = async () => {
+    if (!gameId) return;
+
+    if (user) {
+      await endGame(gameId);
+      localStorage.removeItem(LocalStorageTokens.GAME_ID);
+      setToast('Game ended. Points are saved! 🎯');
+      navigate('/');
+      return;
+    }
+
+    openModal({ 
+      title: '🥇 SUBMIT SCORE TO LEADERBOARD',
+      body: <GuestSubmitGameStep />
+    }, { compact: true });
   };
 
   return (
@@ -99,7 +137,7 @@ export const GameForm: React.FC<GameFormProps> = (props) => {
               <div className='relative w-full flex justify-center items-center gap-x-2 px-5 bg-btn-gold rounded-bl-full lg:rounded-none'>
                 { isLoading 
                   ? <Lottie animationData={LottieLoading} loop autoplay className='scale-[0.125] origin-center ml-1'/>
-                  : <span className='ml-1 break-all'>{game?.nouns?.[0].word}</span> }
+                  : <span className='ml-1 break-all'>{nouns?.[0]?.word}</span> }
               </div>
             </div>
           </div>
@@ -110,7 +148,7 @@ export const GameForm: React.FC<GameFormProps> = (props) => {
           <GoldenButton text='DAS' cornerStyle='right' compact={true} onClick={() => handleAnswer("neuter")} />
         </div>
       </div>
-      <GoldenButton text='Done' icon={IconCheck} />
+      <GoldenButton text='Done' icon={IconCheck} onClick={handleDone} />
     </div>
   );
 };

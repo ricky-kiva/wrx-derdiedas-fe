@@ -9,7 +9,8 @@ import Lottie from 'lottie-react';
 import type { SearchedNoun } from '../../types/noun/types';
 import { useToast } from '../../hooks/useToast';
 import { LocalStorageTokens } from '../../commons/LocalStorageTokens';
-import { endGame as endGameSvc } from '../../services/game';
+import { deleteGame, endGame as endGameSvc } from '../../services/game';
+import { useAuth } from '../../hooks/useAuth';
 
 interface SearchFormProps {
   gender: Gender | null;
@@ -26,6 +27,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { setToast } = useToast();
+  const { user } = useAuth();
 
   const gameTerminatedRef = useRef(false);
 
@@ -34,18 +36,25 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
 
     gameTerminatedRef.current = true;
 
-    const endGame = async () => {
+    const terminateGame = async () => {
       const gameId = localStorage.getItem(LocalStorageTokens.GAME_ID);
       
-      if (gameId) {
+      if (!gameId) return;
+
+      if (user) {
         await endGameSvc(gameId);
         localStorage.removeItem(LocalStorageTokens.GAME_ID);
         setToast('Game ended. Points are saved! 🎯');
-      };
+        return;
+      }
+
+      await deleteGame(gameId);
+      
+      localStorage.removeItem(LocalStorageTokens.GAME_ID);
     };
 
-    endGame();
-  }, [setToast]);
+    terminateGame();
+  }, [user, setToast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

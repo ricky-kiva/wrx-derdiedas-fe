@@ -7,23 +7,14 @@ import IconLogout from '../../assets/images/icon-logout-1.svg?react';
 import IconMagnifyingGlass from '../../assets/images/icon-magnifying-glass-1.svg?react';
 import HeaderMenu from './HeaderMenu';
 import { GoogleLoginButton, type GoldenButtonProps } from '../Button';
-import { DDDNote } from '../Content';
 import { Link, useLocation } from 'react-router-dom';
 import type { GoldenNavProps } from '../Nav/GoldenNav';
 import { useAuth } from '../../hooks/useAuth';
 import { formatDisplayUsername } from '../../utils/styler';
-import { endGame } from '../../services/game';
-import type { StartGameData } from '../../types/game/types';
 import { useModal } from '../../hooks/useModal';
+import { DDDNote } from '../Content';
 
-interface MainHeaderProps {
-  game: (StartGameData | null);
-  setGame: React.Dispatch<React.SetStateAction<StartGameData | null>>;
-}
-
-export const MainHeader: React.FC<MainHeaderProps> = (props) => {
-  const { game, setGame } = props;
-
+export const MainHeader: React.FC = () => {
   const { user, logout } = useAuth();
   const { openModal } = useModal();
 
@@ -35,25 +26,18 @@ export const MainHeader: React.FC<MainHeaderProps> = (props) => {
   const navItemProps: (GoldenButtonProps | GoldenNavProps)[] = [
     { icon: IconBook, label: 'Note for DerDieDas', onClick: (() => {
       openModal({ 
-        title: 'NOTE ON DERDIEDAS',
+        title: '📕 NOTE ON DERDIEDAS',
         body: <DDDNote />
       });
     }) },
     { to: 'https://www.youtube.com/@rexzeppelin', text: 'Support my new channel', icon: IconYouTube, hideTextOnMobile: true },
     (!isGameRoute 
       ? { to: '/game', text: 'Play', icon: IconGamepad, hideTextOnMobile: true }
-      : { to: '/', text: 'Search', icon: IconMagnifyingGlass, hideTextOnMobile: true, onClick: (game 
-          ? async () => {
-            await endGame({ gameId: game.gameId });
-            console.log(`deleted gameId: ${game.gameId}`);
-            setGame(null);
-          }
-          : (() => {})) 
-        }),
+      : { to: '/', text: 'Search', icon: IconMagnifyingGlass, hideTextOnMobile: true }),
     ...(user 
       ? [
         { icon: IconUser, text: formatDisplayUsername(user.name), hideTextOnMobile: true, onClick: (() => {}) },
-        { icon: IconLogout, onClick: (() => logout()) }
+        { icon: IconLogout, onClick: logout }
       ] satisfies (GoldenButtonProps | GoldenNavProps)[] 
       : [])
   ];

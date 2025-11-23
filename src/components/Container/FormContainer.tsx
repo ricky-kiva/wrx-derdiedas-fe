@@ -4,17 +4,9 @@ import { GameForm, SearchForm } from '../Form';
 import { MeaningExcerpt } from '../Content';
 import { Matches } from '../Matches';
 import { useLocation } from 'react-router-dom';
-import type { StartGameData } from '../../types/game/types';
 import type { SearchedNoun } from '../../types/noun/types';
 
-interface FormContainerProps {
-  game: (StartGameData | null);
-  setGame: React.Dispatch<React.SetStateAction<StartGameData | null>>;
-};
-
-export const FormContainer: React.FC<FormContainerProps> = (props) => {
-  const { game, setGame } = props;
-
+export const FormContainer: React.FC = () => {
   const [data, setData] = useState<SearchedNoun[] | null>(null);
   const [firstItemGender, setFirstItemGender] = useState<Gender | null>(null);
   const [formInput, setFormInput] = useState('');
@@ -42,10 +34,7 @@ export const FormContainer: React.FC<FormContainerProps> = (props) => {
     >
       <div className="relative w-full">
         { isGameRoute 
-          ? <GameForm 
-            game={game} 
-            setGame={setGame} 
-          />
+          ? <GameForm />
           : <SearchForm 
             gender={firstItemGender}
             input={formInput}
