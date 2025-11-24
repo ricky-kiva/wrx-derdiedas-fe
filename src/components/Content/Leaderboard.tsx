@@ -42,8 +42,6 @@ export const Leaderboard: React.FC = () => {
   const onPrev = () => page > 1 && setPage(page - 1);
   const onNext = () => page < totalPages && setPage(page + 1);
 
-  console.log(formatNumberSuffix(1530));
-
   return (
   <div className='flex flex-col gap-4'>
     <p>Play the <b>game</b> and climb the leaderboard!</p>
