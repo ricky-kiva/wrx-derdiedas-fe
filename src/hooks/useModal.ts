@@ -4,6 +4,7 @@ import type { LetterModalContent } from '../components/Modal';
 export interface OpenModalOptions {
   compact?: boolean;
   wider?: boolean;
+  cleanQParams?: boolean
 }
 
 type ModalCtxType = {
