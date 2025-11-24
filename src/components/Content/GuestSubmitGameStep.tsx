@@ -22,19 +22,24 @@ export const GuestSubmitGameStep = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (gameId) {
-      const res = await endGame(gameId, { name });
+    if (!gameId) return;
 
-      if (res.data.status === 'success') {
-        if (!res.data.data.userId) setToast('Game ended. Your 0 points were not saved 😞'); 
-        else setToast('Game ended. Points are saved! 🎯');
-        
-        localStorage.removeItem(LocalStorageTokens.GAME_ID);
-      }
-
-      closeModal();
-      navigate('/');
+    if (!name) {
+      setToast('Hey, you forgot to write your name!');
+      return;
     }
+
+    const res = await endGame(gameId, { name });
+
+    if (res.data.status === 'success') {
+      if (!res.data.data.userId) setToast('Game ended. Your 0 points were not saved 😞'); 
+      else setToast('Game ended. Points are saved! 🎯');
+      
+      localStorage.removeItem(LocalStorageTokens.GAME_ID);
+    }
+
+    closeModal();
+    navigate('/');
   };
 
   return (
@@ -51,11 +56,11 @@ export const GuestSubmitGameStep = () => {
               placeholder='Display Name'
               value={name}
               onChange={(e) => setName(e.target.value) }
-              className={'w-full px-3 text-bg-indigo bg-form-black rounded-full outline-none'}
+              className={'w-full px-3 text-xs text-bg-indigo bg-form-black rounded-full outline-none'}
             />
           </div>
         </div>
-        <GoldenButton icon={IconPlane} />
+        <GoldenButton icon={IconPlane} small={true} />
       </form>
       <HDivider text='OR CONTINUE SCORING ANYTIME' />
       <div className='w-full flex flex-col items-center gap-2 justify-center'>
