@@ -6,11 +6,12 @@ export interface GoldenFilledLabelProps {
   icon?: React.FC<React.SVGProps<SVGSVGElement>>;
   hideTextOnMobile?: boolean;
   cornerStyle?: CornerStyle;
+  small?: boolean;
   compact?: boolean;
 }
 
 export const GoldenFilledLabel: React.FC<GoldenFilledLabelProps> = (props) => {
-  const { text, icon, hideTextOnMobile=false, cornerStyle, compact=false } = props;
+  const { text, icon, hideTextOnMobile=false, cornerStyle, small=false, compact=false } = props;
   
   const isIconOnly = !text;
   const cornerClass = getCornerClass(cornerStyle);
@@ -28,7 +29,7 @@ export const GoldenFilledLabel: React.FC<GoldenFilledLabelProps> = (props) => {
           {text}
         </span>
       )}
-      {icon && React.createElement(icon, { className: "w-3 h-3 fill-bg-indigo" })}
+      {icon && React.createElement(icon, { className: `${small ? 'w-2 h-2' : 'w-3 h-3'} fill-bg-indigo` })}
     </span>
   );
 };

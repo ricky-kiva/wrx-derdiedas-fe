@@ -8,13 +8,14 @@ export interface GoldenButtonProps {
   label?: string;
   hideTextOnMobile?: boolean;
   cornerStyle?: CornerStyle;
+  small?: boolean;
   compact?: boolean;
   inRow?: boolean;
   onClick?: () => void;
 }
 
 export const GoldenButton: React.FC<GoldenButtonProps> = (props) => {
-  const { text, icon, label, hideTextOnMobile=false, cornerStyle, compact=false, inRow=false, onClick } = props;
+  const { text, icon, label, hideTextOnMobile=false, cornerStyle, small=false, compact=false, inRow=false, onClick } = props;
   
   const isIconOnly = !text;
   const cornerClass = getCornerClass(cornerStyle);
@@ -25,10 +26,10 @@ export const GoldenButton: React.FC<GoldenButtonProps> = (props) => {
       onClick={onClick}
       type="submit"
       aria-label={isIconOnly ? label : text}
-      className={`w-fit h-10 flex border-gold-color-only border-gold-hover ${cornerClass} ${paddingClass} 
-        ${isIconOnly ? 'aspect-square': hideTextOnMobile ? 'lg:aspect-auto aspect-square' : ''}`}
+      className={`w-fit ${small ? 'h-8' : 'h-10'} flex border-gold-color-only border-gold-hover transition-all active:scale-[0.98] 
+        ${cornerClass} ${paddingClass} ${isIconOnly ? 'aspect-square': hideTextOnMobile ? 'lg:aspect-auto aspect-square' : ''}`}
     >
-      <GoldenFilledLabel text={text} icon={icon} hideTextOnMobile={hideTextOnMobile} cornerStyle={cornerStyle} compact={compact} />
+      <GoldenFilledLabel text={text} icon={icon} hideTextOnMobile={hideTextOnMobile} cornerStyle={cornerStyle} small={small} compact={compact} />
     </button>
   );
 };

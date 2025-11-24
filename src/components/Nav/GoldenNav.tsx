@@ -16,8 +16,8 @@ export const GoldenNav: React.FC<GoldenNavProps> = (props) => {
   const isIconOnly = !text;
   const isExternal = /^https?:\/\//.test(to);
 
-  const sharedClass = `h-10 flex border-gold-color-only border-gold-hover rounded-full p-[1.5px] 
-    ${isIconOnly ? 'aspect-square': hideTextOnMobile ? 'lg:aspect-auto aspect-square' : ''}`;
+  const sharedClass = `h-10 flex border-gold-color-only border-gold-hover transition-all active:scale-[0.98] 
+  rounded-full p-[1.5px] ${isIconOnly ? 'aspect-square': hideTextOnMobile ? 'lg:aspect-auto aspect-square' : ''}`;
   
   return isExternal ? (
     <a
