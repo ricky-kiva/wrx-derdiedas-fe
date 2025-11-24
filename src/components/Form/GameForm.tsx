@@ -116,7 +116,7 @@ export const GameForm: React.FC = () => {
     }
 
     openModal({ 
-      title: '🥇 SUBMIT SCORE TO LEADERBOARD',
+      title: '🏅 SUBMIT SCORE TO LEADERBOARD',
       body: <GuestSubmitGameStep />
     }, { compact: true });
   };
