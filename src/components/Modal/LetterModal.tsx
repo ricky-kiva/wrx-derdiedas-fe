@@ -9,18 +9,19 @@ interface LetterModalProps {
   onClose: () => void;
   content?: LetterModalContent;
   isCompact?: boolean;
+  isWider?: boolean;
 }
 
 export const LetterModal: React.FC<LetterModalProps> = (props) => {
-  const { onClose, content, isCompact=false } = props;
+  const { onClose, content, isCompact=false, isWider=false } = props;
   
   if (content === undefined) return null;
 
   return (
     <div className='fixed inset-0 bg-black/40 flex items-center justify-center z-20'>
-      <div className={`relative w-3/4 md:w-1/2 lg:w-[29.15%] flex flex-col
-        bg-bg-indigo bg-old-paper-texture-1 bg-cover rounded-t-2xl rounded-b-[4rem] shadow-xl text-sm text-txt-black ${isCompact 
-          ? '' : 'h-[81%] md:h-[75%]'}`}
+      <div className={`relative  flex flex-col
+        bg-bg-indigo bg-old-paper-texture-1 bg-cover rounded-t-2xl rounded-b-[4rem] shadow-xl text-sm text-txt-black 
+        ${isCompact ? '' : 'h-[81%] md:h-[75%]'} ${isWider ? 'w-[90%] md:w-[75%] lg:w-[42.5%]' : 'w-3/4 md:w-1/2 lg:w-[29.15%]'} `}
       >
         <div className='w-full flex justify-end px-6 pt-5'>
           <button 

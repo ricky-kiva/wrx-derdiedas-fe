@@ -3,6 +3,7 @@ import type { LetterModalContent } from '../components/Modal';
 
 export interface OpenModalOptions {
   compact?: boolean;
+  wider?: boolean;
 }
 
 type ModalCtxType = {
