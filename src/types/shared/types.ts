@@ -8,3 +8,9 @@ export type ApiResponse<T=unknown> =
 export type Gender = z.infer<typeof GenderEnum>
 
 export type GenderLabel = 'DER' | 'DIE' | 'DAS' | '?';
+
+export interface PagedDTO<T> {
+  items: T[];
+  page: number;
+  totalPages: number;
+}
