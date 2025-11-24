@@ -5,6 +5,7 @@ import IconGamepad from '../../assets/images/icon-gamepad-1.svg?react';
 import IconUser from '../../assets/images/icon-user-1.svg?react';
 import IconLogout from '../../assets/images/icon-logout-1.svg?react';
 import IconMagnifyingGlass from '../../assets/images/icon-magnifying-glass-1.svg?react';
+import IconMedal from '../../assets/images/icon-medal-1.svg?react';
 import HeaderMenu from './HeaderMenu';
 import { GoogleLoginButton, type GoldenButtonProps } from '../Button';
 import { Link, useLocation } from 'react-router-dom';
@@ -13,6 +14,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { formatDisplayUsername } from '../../utils/styler';
 import { useModal } from '../../hooks/useModal';
 import { DDDNote } from '../Content';
+import { Leaderboard } from '../Content/Leaderboard';
 
 export const MainHeader: React.FC = () => {
   const { user, logout } = useAuth();
@@ -31,6 +33,15 @@ export const MainHeader: React.FC = () => {
       });
     }) },
     { to: 'https://www.youtube.com/@rexzeppelin', text: 'Support my new channel', icon: IconYouTube, hideTextOnMobile: true },
+    { icon: IconMedal, label: 'Leaderboard', onClick: (() => {
+      openModal({
+        title: '🏅 LEADERBOARD',
+        body: <Leaderboard />
+      }, { 
+        wider: true, 
+        cleanQParams: true 
+      });
+    })},
     (!isGameRoute 
       ? { to: '/game', text: 'Play', icon: IconGamepad, hideTextOnMobile: true }
       : { to: '/', text: 'Search', icon: IconMagnifyingGlass, hideTextOnMobile: true }),
