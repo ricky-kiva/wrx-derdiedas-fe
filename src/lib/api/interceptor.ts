@@ -41,7 +41,6 @@ export function setupResAuthInterceptor(
             return api(originalReq);
           } else {
             setAccessToken(null);
-            setToast("Session has expired. Please log in again");
           }
         } catch {
           setAccessToken(null);
