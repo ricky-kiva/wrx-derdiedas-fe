@@ -8,6 +8,7 @@ import { googleLogout } from '@react-oauth/google';
 import { LocalStorageTokens } from '../commons/LocalStorageTokens';
 import { endGame, updateGame } from '../services/game';
 import { useGameStore } from '../hooks/useGameStore';
+import { updateUser as updateUserSvc } from '../services/user';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -99,8 +100,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const updateUser = async (updates: Partial<User>): Promise<User | undefined> => {
+    if (!user?.id) return undefined;
+
+    const res = await updateUserSvc(user.id, updates);
+
+    if (res.data.status === 'success') {
+      const resUser = res.data.data;
+
+      const updatedUser: User = {
+        id: resUser.id,
+        name: resUser.name,
+        email: user.email
+      };
+
+      setUser(prev => {
+        if (!prev) return prev;
+        const next = { ...prev, ...updatedUser };
+        return next;
+      });
+
+      localStorage.setItem(LocalStorageTokens.USER_INFO, JSON.stringify(updatedUser));
+
+      return updatedUser;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ accessToken, isLoading, user, login, logout }}>
+    <AuthContext.Provider value={{ accessToken, isLoading, user, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
