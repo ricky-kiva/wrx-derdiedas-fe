@@ -15,6 +15,7 @@ import { formatDisplayUsername } from '../../utils/styler';
 import { useModal } from '../../hooks/useModal';
 import { DDDNote } from '../Content';
 import { Leaderboard } from '../Content/Leaderboard';
+import { UserInfo } from '../Content/UserInfo';
 
 export const MainHeader: React.FC = () => {
   const { user, logout } = useAuth();
@@ -32,7 +33,6 @@ export const MainHeader: React.FC = () => {
         body: <DDDNote />
       });
     }) },
-    { to: 'https://www.youtube.com/@rexzeppelin', text: 'Support my new channel', icon: IconYouTube, hideTextOnMobile: true },
     { icon: IconMedal, label: 'Leaderboard', onClick: (() => {
       openModal({
         title: '🏅 LEADERBOARD',
@@ -42,12 +42,18 @@ export const MainHeader: React.FC = () => {
         cleanQParams: true 
       });
     })},
+    { to: 'https://www.youtube.com/@rexzeppelin', text: 'Support my new channel', icon: IconYouTube, hideTextOnMobile: true },
     (!isGameRoute 
       ? { to: '/game', text: 'Play', icon: IconGamepad, hideTextOnMobile: true }
       : { to: '/', text: 'Search', icon: IconMagnifyingGlass, hideTextOnMobile: true }),
     ...(user 
       ? [
-        { icon: IconUser, text: formatDisplayUsername(user.name), hideTextOnMobile: true, onClick: (() => {}) },
+        { icon: IconUser, text: formatDisplayUsername(user.name), hideTextOnMobile: true, onClick: (() => {
+          openModal({
+            title: `❤️ HI THERE!`,
+            body: <UserInfo />
+          }, { compact: true });
+        }) },
         { icon: IconLogout, onClick: logout }
       ] satisfies (GoldenButtonProps | GoldenNavProps)[] 
       : [])
