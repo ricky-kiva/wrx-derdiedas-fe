@@ -9,7 +9,7 @@ import Lottie from 'lottie-react';
 import type { SearchedNoun } from '../../types/noun/types';
 import { useToast } from '../../hooks/useToast';
 import { LocalStorageTokens } from '../../commons/LocalStorageTokens';
-import { deleteGame, endGame as endGameSvc } from '../../services/game';
+import { deleteGame, endGame as endGameSvc, getGame } from '../../services/game';
 import { useAuth } from '../../hooks/useAuth';
 
 interface SearchFormProps {
@@ -40,6 +40,13 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
       const gameId = localStorage.getItem(LocalStorageTokens.GAME_ID);
       
       if (!gameId) return;
+
+      const gameInStorage = await getGame(gameId);
+
+      if (!(gameInStorage.data.status === 'success')) {
+        localStorage.removeItem(LocalStorageTokens.GAME_ID);
+        return;
+      }
 
       if (user) {
         await endGameSvc(gameId);
