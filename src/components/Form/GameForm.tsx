@@ -13,7 +13,11 @@ import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../hooks/useModal';
 import { GuestSubmitGameStep } from '../Content';
 
-export const GameForm: React.FC = () => {
+interface GameFormProps {
+  setMeanings: React.Dispatch<React.SetStateAction<string[] | undefined>>;
+}
+
+export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [points, setPoints] = useState(0);
 
@@ -44,14 +48,12 @@ export const GameForm: React.FC = () => {
         const localGameId = localStorage.getItem(LocalStorageTokens.GAME_ID);
 
         if (localGameId) {
-          try {
-            const res = await getGame(localGameId, { _silent: true });
+          const res = await getGame(localGameId, { _silent: true });
 
-            if (res.data.status === 'success') {
-              gameData = res.data.data;
-              setPoints(res.data.data.points);
-            }
-          } catch { void 0; }
+          if (res.data.status === 'success') {
+            gameData = res.data.data;
+            setPoints(res.data.data.points);
+          }
         }
 
         if (!gameData) {
@@ -66,6 +68,7 @@ export const GameForm: React.FC = () => {
         if (gameData) {
           setGameId(gameData.id);
           setNouns(gameData.nouns);
+          setMeanings(gameData.nouns[0].meanings);
         }
       } finally {
         setIsLoading(false);
@@ -73,7 +76,7 @@ export const GameForm: React.FC = () => {
     };
     
     initGame();
-  }, [setNouns, setGameId, user?.id]);
+  }, [user?.id, setNouns, setGameId, setMeanings]);
 
   const handleCorrect = (isCorrect: boolean) => {
     if (isCorrect) setToast("Correct! 🎉"); 
@@ -96,8 +99,23 @@ export const GameForm: React.FC = () => {
 
           setPoints(currentScore);
           setNouns(nextNouns ? nextNouns : nouns.slice(1));
+          setMeanings(nextNouns ? nextNouns[0].meanings : nouns.slice(1)[0].meanings);
           handleCorrect(correct);
+          return;
         }
+      }
+    } catch {
+      const resNewGame = await startGame({ userId: user?.id });
+
+      if (resNewGame.data.status === 'success') {
+        localStorage.setItem(LocalStorageTokens.GAME_ID, resNewGame.data.data.id);
+        
+        setGameId(resNewGame.data.data.id);
+        setNouns(resNewGame.data.data.nouns);
+        setMeanings(resNewGame.data.data.nouns[0].meanings);
+        setPoints(0);
+
+        setToast('Game expired or corrupted. Starting a fresh one! 🎮');
       }
     } finally {
       setIsLoading(false);
