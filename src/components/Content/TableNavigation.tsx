@@ -1,5 +1,6 @@
 import type React from 'react';
 import { useState } from 'react';
+import { createTempInputHandler } from '../../utils/form';
 
 interface TableNavigationProps {
   page: number;
@@ -23,45 +24,27 @@ export const TableNavigation: React.FC<TableNavigationProps> = (props) => {
   const [tempPage, setTempPage] = useState(page);
   const [tempLimit, setTempLimit] = useState(limit);
 
-  const createEnterHandler = (
-    setRealValue: (v: number) => void,
-    setTempLimit: (v: number) => void,
-    min: number,
-    max: number
-  ) => {
-    return (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key !== 'Enter') return;
+  const handleLimitEnter = createTempInputHandler<number>(setLimit, setTempLimit, {
+    min: LIMIT_MIN,
+    max: LIMIT_MAX,
+    key: 'Enter',
+  });
 
-      const raw = Number((e.target as HTMLInputElement).value);
+  const handlePageEnter = createTempInputHandler<number>(setPage, setTempPage, {
+    min: PAGE_MIN,
+    max: PAGE_MAX(totalPages),
+    key: 'Enter',
+  });
 
-      if (Number.isNaN(raw)) return;
+  const handleLimitBlur = createTempInputHandler<number>(setLimit, setTempLimit, {
+    min: LIMIT_MIN,
+    max: LIMIT_MAX,
+  });
 
-      const clamped = Math.min(Math.max(raw, min), max);
-      setRealValue(clamped);
-      setTempLimit(clamped);
-    };
-  };
-
-  const createBlurHandler = (
-    setRealValue: (v: number) => void,
-    setTempValue: (v: number) => void,
-    min: number,
-    max: number
-  ) => {
-    return (e: React.FocusEvent<HTMLInputElement>) => {
-      const raw = Number((e.target as HTMLInputElement).value);
-      if (Number.isNaN(raw)) return;
-
-      const clamped = Math.min(Math.max(raw, min), max);
-      setRealValue(clamped);
-      setTempValue(clamped);
-    };
-  };
-
-  const handleLimitEnter = createEnterHandler(setLimit, setTempLimit, LIMIT_MIN, LIMIT_MAX);
-  const handlePageEnter = createEnterHandler(setPage, setTempPage, PAGE_MIN, PAGE_MAX(totalPages));
-  const handleLimitBlur = createBlurHandler(setLimit, setTempLimit, LIMIT_MIN, LIMIT_MAX);
-  const handlePageBlur = createBlurHandler(setPage, setTempPage, PAGE_MIN, PAGE_MAX(totalPages));
+  const handlePageBlur = createTempInputHandler<number>(setPage, setTempPage, {
+    min: PAGE_MIN,
+    max: PAGE_MAX(totalPages),
+  });
 
   return (
     <div className={`flex justify-between items-center px-2
