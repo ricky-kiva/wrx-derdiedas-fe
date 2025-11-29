@@ -13,8 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../hooks/useModal';
 import { GuestSubmitGameStep } from '../Content';
 import { useIsMobile } from '../../hooks/useIsMobile';
-import { motion } from 'framer-motion';
-import { slideUpBlur } from '../../utils/animation';
+import { AnimatePresence, motion } from 'framer-motion';
+import { fadeBlur, slideUpBlur } from '../../utils/animation';
 
 interface GameFormProps {
   setMeanings: React.Dispatch<React.SetStateAction<string[] | undefined>>;
@@ -160,9 +160,13 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
         <div className='flex flex-1 border-gold-hover rounded-bl-full rounded-r-full lg:rounded-r-none lg:rounded-none'>
           <div className='h-10 w-full flex p-[1.5px] border-gold-color-only rounded-bl-full rounded-r-full lg:rounded-r-none lg:rounded-none'>
             <div className='relative w-full flex justify-center items-center gap-x-2 px-5 bg-btn-gold rounded-bl-full rounded-r-full lg:rounded-r-none lg:rounded-none'>
-              { isLoading 
-                ? <Lottie animationData={LottieLoading} loop autoplay className='scale-[0.125] origin-center ml-1'/>
-                : <span className='ml-1 break-all'>{nouns?.[0]?.word}</span> }
+              <AnimatePresence mode='wait'>
+                { isLoading 
+                ? <motion.div {...fadeBlur()}>
+                  <Lottie animationData={LottieLoading} loop autoplay className='scale-[0.125] origin-center ml-1'/>
+                </motion.div>
+                : <motion.span {...fadeBlur()} className='ml-1 break-all'>{nouns?.[0]?.word}</motion.span> }
+              </AnimatePresence>
             </div>
           </div>
         </div>
