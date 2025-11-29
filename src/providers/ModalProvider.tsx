@@ -2,6 +2,7 @@ import type React from 'react';
 import { useState } from 'react';
 import { LetterModal, type LetterModalContent } from '../components/Modal';
 import { ModalContext, type OpenModalOptions } from '../hooks/useModal';
+import { AnimatePresence } from 'framer-motion';
 
 interface ModalProviderProps {
   children: React.ReactNode;
@@ -36,7 +37,9 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   return (
     <ModalContext.Provider value={{ openModal, closeModal }}>
       {children}
-      {content && <LetterModal onClose={closeModal} content={content} isCompact={isCompact} isWider={isWider} />}
+      <AnimatePresence>
+        {content && <LetterModal onClose={closeModal} content={content} isCompact={isCompact} isWider={isWider} />}
+      </AnimatePresence>
     </ModalContext.Provider>
   );
 };
