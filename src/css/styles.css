@@ -52,6 +52,14 @@
     scrollbar-width: thin;
     scrollbar-color: var(--color-btn-bg-top-gold) transparent;
   }
+
+  .anim-drop-shadow-txt-black {
+    filter:
+      drop-shadow(0 0 2px rgba(26,27,31,1))
+      drop-shadow(0 0 3px rgba(26,27,31,0.8))
+      drop-shadow(0 0 4px rgba(26,27,31,0.6))
+      blur(var(--blur, 0px));
+  }
 }
 
 @layer utilities {
