@@ -130,6 +130,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
           <input 
             type='text' 
             name='word' 
+            autoComplete='off'
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
