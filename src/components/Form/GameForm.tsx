@@ -12,6 +12,7 @@ import { useGameStore } from '../../hooks/useGameStore';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../hooks/useModal';
 import { GuestSubmitGameStep } from '../Content';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface GameFormProps {
   setMeanings: React.Dispatch<React.SetStateAction<string[] | undefined>>;
@@ -26,6 +27,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
   const { user } = useAuth();
   const { setToast } = useToast();
   const { openModal } = useModal();
+  const isMobile = useIsMobile(768);
   
   const gameId = useGameStore(s => s.gameId);
   const nouns = useGameStore(s => s.nouns);
@@ -140,33 +142,33 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
   };
 
   return (
-    <div className='w-full flex flex-col lg:flex-row justify-center items-center gap-x-2 md:gap-x-4 gap-y-2 lg:gap-y-0'>
-      <div className='w-full flex justify-center items-end lg:items-center gap-x-1 md:gap-x-2'>
-        <div className='flex flex-1 flex-col lg:flex-row'>
-          <div className='flex w-16 border-gold-hover rounded-t-2xl lg:rounded-l-full'>
-            <div className='h-10 flex py-[1.5px] pl-[1.5px] pr-[0.75px] border-gold-color-only rounded-t-2xl lg:rounded-l-full'>
-              <div className='w-16 flex justify-center items-center gap-x-2 px-5 bg-form-black rounded-t-2xl lg:rounded-l-full'>
-                <span className='mt-1 lg:mt-0 lg:ml-1'>{points}</span>
-              </div>
-            </div>
-          </div>
-          <div className='flex flex-1 border-gold-hover rounded-bl-full lg:rounded-none'>
-            <div className='h-10 w-full flex p-[1.5px] border-gold-color-only rounded-bl-full lg:rounded-none'>
-              <div className='relative w-full flex justify-center items-center gap-x-2 px-5 bg-btn-gold rounded-bl-full lg:rounded-none'>
-                { isLoading 
-                  ? <Lottie animationData={LottieLoading} loop autoplay className='scale-[0.125] origin-center ml-1'/>
-                  : <span className='ml-1 break-all'>{nouns?.[0]?.word}</span> }
-              </div>
+    <div className='w-full flex flex-col md:flex-row justify-center items-end lg:items-center gap-x-1 md:gap-x-2 gap-y-2 md:gap-y-0'>
+      <div className='flex flex-1 w-full flex-col lg:flex-row'>
+        <div className='flex w-16 border-gold-hover rounded-t-2xl lg:rounded-l-full'>
+          <div className='h-10 flex py-[1.5px] pl-[1.5px] pr-[0.75px] border-gold-color-only rounded-t-2xl lg:rounded-l-full'>
+            <div className='w-16 flex justify-center items-center gap-x-2 px-5 bg-form-black rounded-t-2xl lg:rounded-l-full'>
+              <span className='mt-1 lg:mt-0 lg:ml-1'>{points}</span>
             </div>
           </div>
         </div>
-        <div className='flex'>
-          <GoldenButton text='DER' cornerStyle='square' compact={true} inRow={true} onClick={() => handleAnswer("masculine")} />
-          <GoldenButton text='DIE' cornerStyle='square' compact={true} inRow={true} onClick={() => handleAnswer("feminine")} />
-          <GoldenButton text='DAS' cornerStyle='right' compact={true} onClick={() => handleAnswer("neuter")} />
+        <div className='flex flex-1 border-gold-hover rounded-bl-full rounded-r-full md:rounded-r-none lg:rounded-none'>
+          <div className='h-10 w-full flex p-[1.5px] border-gold-color-only rounded-bl-full rounded-r-full md:rounded-r-none lg:rounded-none'>
+            <div className='relative w-full flex justify-center items-center gap-x-2 px-5 bg-btn-gold rounded-bl-full rounded-r-full md:rounded-r-none lg:rounded-none'>
+              { isLoading 
+                ? <Lottie animationData={LottieLoading} loop autoplay className='scale-[0.125] origin-center ml-1'/>
+                : <span className='ml-1 break-all'>{nouns?.[0]?.word}</span> }
+            </div>
+          </div>
         </div>
       </div>
-      <GoldenButton text='Done' icon={IconCheck} onClick={handleDone} />
+      <div className='flex flex-row-reverse md:flex-row w-full md:w-fit justify-between gap-x-1 md:gap-x-4'>
+        <div className='flex'>
+          <GoldenButton text='DER' cornerStyle={isMobile ? 'left' : 'square'} inRow={true} onClick={() => handleAnswer("masculine")} />
+          <GoldenButton text='DIE' cornerStyle='square' inRow={true} onClick={() => handleAnswer("feminine")} />
+          <GoldenButton text='DAS' cornerStyle='right' onClick={() => handleAnswer("neuter")} />
+        </div>
+        <GoldenButton text='Done' icon={IconCheck} onClick={handleDone} />
+      </div>
     </div>
   );
 };
