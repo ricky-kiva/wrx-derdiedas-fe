@@ -18,9 +18,7 @@ export const Matches: React.FC<MatchesProps> = ({ matchesData, onMatchClick }) =
 
   return (
     <motion.div
-      variants={slideUpBlur()}
-      initial="initial"
-      animate="animate"
+      {...slideUpBlur()}
       className='flex flex-col gap-y-5'
     >
       <hr className='border-t border-bg-indigo drop-shadow-txt-black' />

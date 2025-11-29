@@ -145,9 +145,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
 
   return (
     <motion.div 
-      variants={slideUpBlur()}
-      initial="initial"
-      animate="animate"
+      {...slideUpBlur()}
       className='w-full flex flex-col lg:flex-row justify-center items-end lg:items-center gap-x-1 lg:gap-x-2 gap-y-2 lg:gap-y-0'>
       <div className='flex flex-1 w-full flex-col lg:flex-row'>
         <div className='flex w-16 border-gold-hover rounded-t-2xl lg:rounded-l-full'>
