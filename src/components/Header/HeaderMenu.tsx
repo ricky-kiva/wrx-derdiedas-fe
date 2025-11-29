@@ -1,6 +1,6 @@
 import { useAuth } from '../../hooks/useAuth';
 import { GoldenButton, GoogleLoginButton, type GoldenButtonProps } from '../Button';
-import { GoldenNav, type GoldenNavProps } from '../Nav/GoldenNav';
+import { GoldenNav, type GoldenNavProps } from '../Nav';
 
 interface HeaderMenuProps {
   itemProps: (GoldenButtonProps | GoldenNavProps)[]
