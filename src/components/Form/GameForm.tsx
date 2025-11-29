@@ -14,7 +14,7 @@ import { useModal } from '../../hooks/useModal';
 import { GuestSubmitGameStep } from '../Content';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { AnimatePresence, motion } from 'framer-motion';
-import { fadeBlur, slideUpBlur } from '../../utils/animation';
+import { fadeBlur, slideYBlur } from '../../utils/animation';
 
 interface GameFormProps {
   setMeanings: React.Dispatch<React.SetStateAction<string[] | undefined>>;
@@ -145,7 +145,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
 
   return (
     <motion.div 
-      {...slideUpBlur()}
+      {...slideYBlur()}
       className='w-full flex flex-col lg:flex-row justify-center items-end lg:items-center gap-x-1 lg:gap-x-2 gap-y-2 lg:gap-y-0'>
       <div className='flex flex-1 w-full flex-col lg:flex-row'>
         <div className='flex w-16 border-gold-hover rounded-t-2xl lg:rounded-l-full'>

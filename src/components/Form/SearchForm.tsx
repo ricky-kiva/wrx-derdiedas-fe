@@ -12,7 +12,7 @@ import { LocalStorageTokens } from '../../commons/LocalStorageTokens';
 import { deleteGame, endGame as endGameSvc, getGame } from '../../services/game';
 import { useAuth } from '../../hooks/useAuth';
 import { motion } from 'framer-motion';
-import { slideUpBlur } from '../../utils/animation';
+import { slideYBlur } from '../../utils/animation';
 
 interface SearchFormProps {
   gender: Gender | null;
@@ -108,7 +108,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
   return (
     <motion.form 
       onSubmit={handleSubmit}
-      {...slideUpBlur()}
+      {...slideYBlur()}
       className='w-full flex flex-col md:flex-row justify-center items-center gap-y-4 md:gap-y-0 gap-x-2 md:gap-x-4'
     >
       <div className='w-full flex flex-1 border-gold-hover rounded-full'>

@@ -1,11 +1,11 @@
 import { easeInOut } from 'framer-motion';
 
 interface SlideUpProps { y: number; }
-interface SlideUpBlurProps extends SlideUpProps { blur: number; }
+interface slideYBlurProps extends SlideUpProps { blur?: number; }
 
-const SLIDE_UP_BLUR_DEFAULT: SlideUpBlurProps = { y: 24, blur: 2 };
+const SLIDE_UP_BLUR_DEFAULT: slideYBlurProps = { y: 24, blur: 2 };
 
-export const slideUpBlur = (props: SlideUpBlurProps=SLIDE_UP_BLUR_DEFAULT) => {
+export const slideYBlur = (props: slideYBlurProps=SLIDE_UP_BLUR_DEFAULT) => {
   const { y, blur } = props;
 
   return {

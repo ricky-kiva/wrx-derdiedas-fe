@@ -1,7 +1,7 @@
 import type React from 'react';
 import MatchItem from './MatchItem';
 import { motion } from 'framer-motion';
-import { slideUpBlur } from '../../utils/animation';
+import { slideYBlur } from '../../utils/animation';
 
 interface MatchesMatchData {
   id: string,
@@ -18,7 +18,7 @@ export const Matches: React.FC<MatchesProps> = ({ matchesData, onMatchClick }) =
 
   return (
     <motion.div
-      {...slideUpBlur()}
+      {...slideYBlur()}
       className='flex flex-col gap-y-5'
     >
       <hr className='border-t border-bg-indigo drop-shadow-txt-black' />

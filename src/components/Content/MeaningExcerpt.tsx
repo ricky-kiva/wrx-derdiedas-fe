@@ -1,6 +1,6 @@
 import { useModal } from '../../hooks/useModal';
 import { motion, useAnimation } from 'framer-motion';
-import { slideUpBlur } from '../../utils/animation';
+import { slideYBlur } from '../../utils/animation';
 import { useEffect } from 'react';
 
 interface MeaningExcerptProps {
@@ -37,7 +37,7 @@ export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings }) => {
   
   return (
     <motion.div
-      variants={slideUpBlur()}
+      variants={slideYBlur()}
       animate={animControls}
       className='w-full flex flex-col gap-y-3 anim-drop-shadow-txt-black'>
       <h3>MEANINGS</h3>
