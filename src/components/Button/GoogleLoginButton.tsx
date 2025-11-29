@@ -1,9 +1,9 @@
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../hooks/useModal';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 interface GoogleLoginButtonProps {
   fromGame?: boolean
@@ -12,23 +12,12 @@ interface GoogleLoginButtonProps {
 export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = (props) => {
   const { fromGame=false } = props;
 
-  const [isCompact, setIsCompact] = useState(false);
-
   const { login } = useAuth();
   const { setToast } = useToast();
   const { closeModal } = useModal();
-
+  const isMobile = useIsMobile();
+  
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const updateType = () => { setIsCompact(window.innerWidth < 1024); };
-
-    updateType();
-
-    window.addEventListener('resize', updateType);
-
-    return () => window.removeEventListener('resize', updateType);
-  }, []);
   
   const handleSuccess = async (credRes: CredentialResponse) => {
     if (!credRes.credential) {
@@ -48,8 +37,8 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = (props) => {
     useOneTap
     onSuccess={handleSuccess} 
     onError={() => setToast("Login failed")}
-    text={isCompact ? 'signin' : 'signin_with'}
-    shape={isCompact ? 'pill' : 'rectangular'}
-    theme={isCompact ? 'filled_black' : 'outline'}
+    text={isMobile ? 'signin' : 'signin_with'}
+    shape={isMobile ? 'pill' : 'rectangular'}
+    theme={isMobile ? 'filled_black' : 'outline'}
   />;
 };
