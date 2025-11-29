@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type Ref } from 'react';
 import { GoldenFilledLabel } from '../Label';
 import { getCornerClass, type CornerStyle } from '../../utils/styler/component';
 
@@ -6,6 +6,7 @@ export interface GoldenButtonProps {
   text?: string;
   icon?: React.FC<React.SVGProps<SVGSVGElement>>;
   label?: string;
+  buttonRef?: Ref<HTMLButtonElement>
   hideTextOnMobile?: boolean;
   cornerStyle?: CornerStyle;
   small?: boolean;
@@ -15,7 +16,7 @@ export interface GoldenButtonProps {
 }
 
 export const GoldenButton: React.FC<GoldenButtonProps> = (props) => {
-  const { text, icon, label, hideTextOnMobile=false, cornerStyle, small=false, compact=false, inRow=false, onClick } = props;
+  const { text, icon, label, buttonRef, hideTextOnMobile=false, cornerStyle, small=false, compact=false, inRow=false, onClick } = props;
   
   const isIconOnly = !text;
   const cornerClass = getCornerClass(cornerStyle);
@@ -23,6 +24,7 @@ export const GoldenButton: React.FC<GoldenButtonProps> = (props) => {
 
   return (
     <button
+      ref={buttonRef}
       onClick={onClick}
       type="submit"
       aria-label={isIconOnly ? label : text}
