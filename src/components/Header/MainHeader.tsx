@@ -20,6 +20,7 @@ import { MobileHeaderMenu } from './MobileHeaderMenu';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { useEffect, useRef, useState } from 'react';
 import type { GoldenNavProps } from '../Nav';
+import { AnimatePresence } from 'framer-motion';
 
 export const MainHeader: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -103,7 +104,9 @@ export const MainHeader: React.FC = () => {
           />
         </Link>
         <HeaderMenu itemProps={isMobile ? mobileNavItemProps : navItemProps} />
-        {isMobileMenuOpen && isMobile && <MobileHeaderMenu ref={menuRef} itemProps={mobileMenuItemProps} />}
+        <AnimatePresence>
+          {isMobileMenuOpen && isMobile && <MobileHeaderMenu ref={menuRef} itemProps={mobileMenuItemProps} />}
+        </AnimatePresence>
         {!user && <div className='absolute right-0 top-full mt-1 hidden lg:block'>
           <GoogleLoginButton/>
         </div>}

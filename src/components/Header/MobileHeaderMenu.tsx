@@ -3,6 +3,8 @@ import { forwardRef } from 'react';
 import type { GoldenButtonProps } from '../Button';
 import type { GoldenNavProps } from '../Nav';
 import { HDivider } from '../Content';
+import { motion } from 'framer-motion';
+import { slideYBlur } from '../../utils/animation';
 
 interface MobileHeaderMenuProps {
   itemProps: (GoldenButtonProps | GoldenNavProps)[];
@@ -11,8 +13,9 @@ interface MobileHeaderMenuProps {
 export const MobileHeaderMenu = forwardRef<HTMLDivElement, MobileHeaderMenuProps>(
   ({ itemProps }, ref) => {
     return (
-      <div
+      <motion.div
         ref={ref}
+        {...slideYBlur({ y: -16 })}
         className="absolute top-14 z-[2] right-0 flex flex-col bg-bg-indigo rounded-[17.5px] shadow-2xl p-3"
       >
         {itemProps.map((item, i) => {
@@ -45,7 +48,7 @@ export const MobileHeaderMenu = forwardRef<HTMLDivElement, MobileHeaderMenuProps
             </div>
           );
         })}
-      </div>
+      </motion.div>
     );
   }
 );
