@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../hooks/useModal';
 import { GuestSubmitGameStep } from '../Content';
 import { useIsMobile } from '../../hooks/useIsMobile';
+import { motion } from 'framer-motion';
+import { slideUpBlur } from '../../utils/animation';
 
 interface GameFormProps {
   setMeanings: React.Dispatch<React.SetStateAction<string[] | undefined>>;
@@ -142,7 +144,11 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
   };
 
   return (
-    <div className='w-full flex flex-col lg:flex-row justify-center items-end lg:items-center gap-x-1 lg:gap-x-2 gap-y-2 lg:gap-y-0'>
+    <motion.div 
+      variants={slideUpBlur()}
+      initial="initial"
+      animate="animate"
+      className='w-full flex flex-col lg:flex-row justify-center items-end lg:items-center gap-x-1 lg:gap-x-2 gap-y-2 lg:gap-y-0'>
       <div className='flex flex-1 w-full flex-col lg:flex-row'>
         <div className='flex w-16 border-gold-hover rounded-t-2xl lg:rounded-l-full'>
           <div className='h-10 flex py-[1.5px] pl-[1.5px] pr-[0.75px] border-gold-color-only rounded-t-2xl lg:rounded-l-full'>
@@ -169,6 +175,6 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
         </div>
         <GoldenButton text='Done' icon={IconCheck} onClick={handleDone} />
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -1,4 +1,7 @@
 import { useModal } from '../../hooks/useModal';
+import { motion, useAnimation } from 'framer-motion';
+import { slideUpBlur } from '../../utils/animation';
+import { useEffect } from 'react';
 
 interface MeaningExcerptProps {
   meanings?: string[];
@@ -6,6 +9,13 @@ interface MeaningExcerptProps {
 
 export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings }) => {
   const { openModal } = useModal();
+
+  const animControls = useAnimation();
+
+  useEffect(() => {
+    animControls.set("initial");
+    animControls.start("animate");
+  }, [meanings, animControls]);
 
   if (!meanings || meanings.length === 0) return null;
 
@@ -26,7 +36,10 @@ export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings }) => {
   );
   
   return (
-    <div className='w-full flex flex-col gap-y-3 drop-shadow-txt-black'>
+    <motion.div
+      variants={slideUpBlur()}
+      animate={animControls}
+      className='w-full flex flex-col gap-y-3 anim-drop-shadow-txt-black'>
       <h3>MEANINGS</h3>
       <p>
         { meaningsPreview }
@@ -43,6 +56,6 @@ export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings }) => {
           </>
         )}
       </p>
-    </div>
+    </motion.div>
   );
 };
