@@ -5,6 +5,7 @@ import { MeaningExcerpt } from '../Content';
 import { Matches } from '../Matches';
 import { useLocation } from 'react-router-dom';
 import type { SearchedNoun } from '../../types/noun/types';
+import { motion } from 'framer-motion';
 
 export const FormContainer: React.FC = () => {
   const [data, setData] = useState<SearchedNoun[] | null>(null);
@@ -30,8 +31,10 @@ export const FormContainer: React.FC = () => {
   };
 
   return (
-    <div className={`w-full md:w-3/4 ${isGameRoute ? 'lg:w-3/4' : 'lg:w-1/2'} flex flex-col gap-y-6 items-center self-center 
-      transform -translate-y-4 lg:-translate-y-10`}
+    <motion.div
+      animate={{ y: (data ? -32 : 0) }}
+      transition={{ duration: 0.4, ease: 'easeInOut' }} 
+      className={`w-full md:w-3/4 ${isGameRoute ? 'lg:w-3/4' : 'lg:w-1/2'} flex flex-col gap-y-6 items-center self-center `}
     >
       <div className="relative w-full">
         { isGameRoute 
@@ -55,6 +58,6 @@ export const FormContainer: React.FC = () => {
           /> }
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
