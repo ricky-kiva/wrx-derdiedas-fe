@@ -13,7 +13,7 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ itemProps }) => {
     <nav className='flex gap-2 justify-end'>
       {itemProps.map((prop, i) => {
         if ('to' in prop) return <GoldenNav key={i} {...prop} />;
-        return <GoldenButton key={i} {...prop} />;
+        return <GoldenButton key={i} {...prop} buttonRef={'buttonRef' in prop ? prop.buttonRef : undefined} />;
       })}
       {!user && <div className="block lg:hidden">
         <GoogleLoginButton />
