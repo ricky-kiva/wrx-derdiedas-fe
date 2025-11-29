@@ -16,7 +16,7 @@ const infos = [
 ];
 
 const FooterContact: React.FC<FooterContactProps> = ({ socials }) => (
-  <div className='flex gap-[6px] items-center'>
+  <div className='flex flex-col-reverse md:flex-row gap-[6px] items-center'>
     <div className='flex gap-[6px]'>
       {socials.map((social, i) => (
         <a
@@ -30,12 +30,14 @@ const FooterContact: React.FC<FooterContactProps> = ({ socials }) => (
         </a>
       ))}
     </div>
-    {infos.map((info, i) => (
-      <React.Fragment key={i}>
-        <span>✦</span>
-        <span className='duration-300 hover:text-shadow-a-gold text-center'>{info}</span>
-      </React.Fragment>
-    ))}
+    <div className='flex gap-[6px] items-center'>
+      {infos.map((info, i) => (
+        <React.Fragment key={i}>
+          <span className={`md:block ${(i === 0) ? 'hidden' : ''}`}>✦</span>
+          <span className='duration-300 hover:text-shadow-a-gold text-center'>{info}</span>
+        </React.Fragment>
+      ))}
+    </div>
   </div>
 );
 
