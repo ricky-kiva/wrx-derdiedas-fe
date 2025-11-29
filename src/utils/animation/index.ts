@@ -11,7 +11,16 @@ export const slideUpBlur = (props: SlideUpBlurProps=SLIDE_UP_BLUR_DEFAULT) => {
   return {
     initial: { opacity: 0, y: y, '--blur': `${blur}px` },
     animate: { opacity: 1, y: 0, '--blur': '0px', transition: { 
-      duration: 0.5, ease: easeInOut
+      duration: 0.4, ease: easeInOut
     }},
+  };
+};
+
+export const fadeBlur = (blur: number=2) => {
+  return {
+    initial: { opacity: 0, filter: `blur(${blur}px)` },
+    animate: { opacity: 1, filter: `blur(0px)` },
+    exit: { opacity: 0, filter: `blur(${blur}px)` },
+    transition: { duration: 0.4 }
   };
 };
