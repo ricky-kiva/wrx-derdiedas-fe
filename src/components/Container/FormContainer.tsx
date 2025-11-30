@@ -12,6 +12,7 @@ export const FormContainer: React.FC = () => {
   const [firstItemGender, setFirstItemGender] = useState<Gender | null>(null);
   const [formInput, setFormInput] = useState('');
   const [meanings, setMeanings] = useState<string[] | undefined>([]);
+  const [isGameWordHighlighted, setIsGameWordHighlighted] = useState(false);
 
   const location = useLocation();
   const pathName = location.pathname;
@@ -38,7 +39,10 @@ export const FormContainer: React.FC = () => {
     >
       <div className="relative w-full">
         { isGameRoute 
-          ? <GameForm setMeanings={setMeanings} />
+          ? <GameForm 
+            setMeanings={setMeanings} 
+            setIsHighlighted={setIsGameWordHighlighted} 
+          />
           : <SearchForm 
             gender={firstItemGender}
             input={formInput}
@@ -49,7 +53,10 @@ export const FormContainer: React.FC = () => {
         <div className="absolute top-[calc(100%+1.5rem)] w-full flex flex-col gap-y-5
           px-6"
         >
-          <MeaningExcerpt meanings={isGameRoute ? meanings : data?.[0]?.item.meanings} />
+          <MeaningExcerpt 
+            meanings={isGameRoute ? meanings : data?.[0]?.item.meanings} 
+            isHighlighted={isGameWordHighlighted}
+          />
           { !isGameRoute && <Matches 
             matchesData={data 
               ? data.map(d => ({ id: d.item.id, word: d.item.word })) 

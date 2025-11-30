@@ -1,7 +1,7 @@
 import { GoldenButton } from '../Button';
 import IconCheck from '../../assets/images/icon-check-1.svg?react';
 import LottieLoading from '../../assets/lottie/loading-1.json';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, type Dispatch, type JSX } from 'react';
 import Lottie from 'lottie-react';
 import type { Gender } from '../../types/shared/types';
 import { answerGame, endGame, getGame, startGame } from '../../services/game';
@@ -15,14 +15,17 @@ import { GuestSubmitGameStep } from '../Content';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { AnimatePresence, motion } from 'framer-motion';
 import { fadeBlur, slideYBlur } from '../../utils/animation';
+import { highlightGenderRulesApprox } from '../../utils/gender';
 
 interface GameFormProps {
-  setMeanings: React.Dispatch<React.SetStateAction<string[] | undefined>>;
+  setMeanings: Dispatch<React.SetStateAction<string[] | undefined>>;
+  setIsHighlighted: Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
+export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighted }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [points, setPoints] = useState(0);
+  const [highlightedWord, setHighlightedWord] = useState<string | JSX.Element>('');
 
   const gameStartedRef = useRef(false);
   
@@ -81,6 +84,12 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
     
     initGame();
   }, [user?.id, setNouns, setGameId, setMeanings]);
+
+  useEffect(() => {
+    const highlightRes = highlightGenderRulesApprox(nouns?.[0]?.word ?? '');
+    setHighlightedWord(highlightRes.element);
+    setIsHighlighted(highlightRes.highlighted);
+  }, [nouns, setIsHighlighted]);
 
   const handleCorrect = (isCorrect: boolean) => {
     if (isCorrect) setToast("Correct! 🎉"); 
@@ -163,7 +172,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings }) => {
                 ? <motion.div {...fadeBlur()}>
                   <Lottie animationData={LottieLoading} loop autoplay className='scale-[0.125] origin-center ml-1'/>
                 </motion.div>
-                : <motion.span {...fadeBlur()} className='ml-1 break-all'>{nouns?.[0]?.word}</motion.span> }
+                : <motion.span {...fadeBlur()} className='ml-1 break-all'>{highlightedWord}</motion.span> }
               </AnimatePresence>
             </div>
           </div>

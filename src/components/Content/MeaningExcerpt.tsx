@@ -2,15 +2,23 @@ import { useModal } from '../../hooks/useModal';
 import { motion, useAnimation } from 'framer-motion';
 import { slideYBlur } from '../../utils/animation';
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface MeaningExcerptProps {
   meanings?: string[];
+  isHighlighted?: boolean;
 }
 
-export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings }) => {
+export const MeaningExcerpt: React.FC<MeaningExcerptProps> = (props) => {
+  const { meanings, isHighlighted=false } = props;
+
   const { openModal } = useModal();
 
   const animControls = useAnimation();
+
+  const location = useLocation();
+  const pathName = location.pathname;
+  const isGameRoute = pathName.startsWith('/game');
 
   useEffect(() => {
     animControls.set("initial");
@@ -27,6 +35,7 @@ export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings }) => {
     .join(' • ');
 
   const meaningsPreview = joinMeanings(meanings.slice(0, PREVIEW_COUNT));
+
   const meaningsFull = (
     <ul className="list-disc list-inside">
       {meanings.map((m, i) => (
@@ -39,8 +48,12 @@ export const MeaningExcerpt: React.FC<MeaningExcerptProps> = ({ meanings }) => {
     <motion.div
       variants={slideYBlur()}
       animate={animControls}
-      className='w-full flex flex-col gap-y-3 anim-drop-shadow-txt-black'>
-      <h3>MEANINGS</h3>
+      className='w-full flex flex-col gap-y-3 anim-drop-shadow-txt-black'
+    >
+      <div className='flex justify-between items-center'>
+        <h3>MEANINGS</h3>
+        {isGameRoute && isHighlighted && <span className='text-[10px] italic'>*Game hints may mislead!</span>}
+      </div>
       <p>
         { meaningsPreview }
         { SHOW_SEE_ALL && (
