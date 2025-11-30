@@ -53,7 +53,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
       if (user) {
         await endGameSvc(gameId);
         localStorage.removeItem(LocalStorageTokens.GAME_ID);
-        setToast('Game ended. Points are saved! 🎯');
+        if (gameInStorage.data.data.points !== 0) setToast('Game ended. Points are saved! 🎯');
         return;
       }
 
