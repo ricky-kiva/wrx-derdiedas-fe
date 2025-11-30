@@ -46,7 +46,7 @@ export const Leaderboard: React.FC = () => {
   <div className='flex flex-col gap-4'>
     <p>Play the <b>game</b> and climb the leaderboard!</p>
     <p>Jump in <b>instantly as a guest</b>, or <b>sign in to keep your progress</b>!</p>
-    <p className='text-[10px] italic'>*Keep your weekly streak alive! <u>Otherwise, your points shrink by 5 after 7 days</u></p>
+    <p className='text-[10px] italic'>*Keep your weekly streak alive! <u>Otherwise, your points will decay by 5 after 7 days</u></p>
     <div className='overflow-x-auto mt-2'>
       <table className='min-w-full text-xs'>
         <thead>
