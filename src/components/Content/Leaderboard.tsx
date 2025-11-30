@@ -47,40 +47,49 @@ export const Leaderboard: React.FC = () => {
     <p>Play the <b>game</b> and climb the leaderboard!</p>
     <p>Jump in <b>instantly as a guest</b>, or <b>sign in to keep your progress</b>!</p>
     <p className='text-[10px] italic'>*Keep your weekly streak alive! <u>Otherwise, your points shrink by 5 after 7 days</u></p>
-    {isLoading 
-      ? <Lottie 
-        animationData={LottieLoading} 
-        loop 
-        autoplay 
-        className='scale-[0.125] origin-center ml-1'
-        style={{ filter: 'brightness(0) saturate(100%) invert(9%) sepia(1%) saturate(6422%) hue-rotate(197deg) brightness(91%) contrast(95%)' }}  
-      />
-      : <>
-        <div className='overflow-x-auto mt-2'>
-          <table className='min-w-full text-xs'>
-            <thead>
-              <tr className='base-table-row border-t'>
-                <th className='base-table-heading-data text-center'>Rank</th>
-                <th className='base-table-heading-data'>Name</th>
-                <th className='base-table-heading-data text-center'>Point</th>
-                <th className='base-table-heading-data'>Last Updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id} className='base-table-row'>
-                  <td className='base-table-data text-center'>{formatRankMedal(item.rank)}</td>
-                  <td className='pr-1 base-table-data'>{item.name}</td>
-                  <td className='pr-1 base-table-data text-center'>{formatNumberSuffix(item.point)}</td>
-                  <td className='pr-1 base-table-data'>{formatRelativeDate(item.updatedAt)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <TableNavigation isBottom={true} page={page} limit={limit} totalPages={totalPages} setPage={setPage} setLimit={setLimit} onPrev={onPrev} onNext={onNext} />
-      </>
-    }
+    <div className='overflow-x-auto mt-2'>
+      <table className='min-w-full text-xs'>
+        <thead>
+          <tr className='base-table-row border-t'>
+            <th className='base-table-heading-data text-center'>Rank</th>
+            <th className='base-table-heading-data'>Name</th>
+            <th className='base-table-heading-data text-center'>Point</th>
+            <th className='base-table-heading-data'>Last Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+        {isLoading 
+          ? <tr className='base-table-row'>
+            <td colSpan={4} className="base-table-data">
+              <div className="flex justify-center">
+                <Lottie
+                  animationData={LottieLoading}
+                  loop
+                  autoplay
+                  className="scale-[2] origin-center"
+                  style={{
+                    display: 'inline-block',
+                    width: '18px',
+                    height: '18px',
+                    filter:
+                      'brightness(0) saturate(100%) invert(9%) sepia(1%) saturate(6422%) hue-rotate(197deg) brightness(91%) contrast(95%)'
+                  }}
+                />
+              </div>
+            </td>
+          </tr>
+          : items.map((item) => (
+            <tr key={item.id} className="base-table-row">
+              <td className="base-table-data text-center">{formatRankMedal(item.rank)}</td>
+              <td className="pr-1 base-table-data">{item.name}</td>
+              <td className="pr-1 base-table-data text-center">{formatNumberSuffix(item.point)}</td>
+              <td className="pr-1 base-table-data">{formatRelativeDate(item.updatedAt)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <TableNavigation isBottom={true} page={page} limit={limit} totalPages={totalPages} setPage={setPage} setLimit={setLimit} onPrev={onPrev} onNext={onNext} />
   </div>
   );
 };
