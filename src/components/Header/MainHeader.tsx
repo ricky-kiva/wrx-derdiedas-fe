@@ -108,7 +108,7 @@ export const MainHeader: React.FC = () => {
           {isMobileMenuOpen && isMobile && <MobileHeaderMenu ref={menuRef} itemProps={mobileMenuItemProps} />}
         </AnimatePresence>
         {!user && <div className='absolute right-0 top-full mt-1 hidden lg:block'>
-          <GoogleLoginButton/>
+          <GoogleLoginButton fromGame={isGameRoute ? true : false} />
         </div>}
       </header>
     </>
