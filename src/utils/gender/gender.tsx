@@ -45,3 +45,44 @@ export const highlightGenderRules = (word: string, gender: Gender): JSX.Element 
       ?? word
   );
 };
+
+interface HighlightGenderRulesApproxOutput {
+  element: JSX.Element | string, 
+  highlighted: boolean 
+}
+
+export const highlightGenderRulesApprox = (word: string): HighlightGenderRulesApproxOutput => {
+  const prefixes: RegExp[] = [/^ge/i];
+  const suffixes: RegExp[] = [/(ling|ich|ig|er|us|ung|schaft|ion|heit|keit|tät|ik|ade|age|euse|ere|ie|anz|enz|chen|um|ment|ma)$/i];
+
+  for (const prefix of prefixes) {
+    const match = word.match(prefix);
+
+    if (match) {
+      const part = match[0];
+      return {
+        element: <>
+          <span className='underline'>{part}</span>
+          {word.slice(part.length)}
+        </>,
+        highlighted: true
+      };
+    }
+  }
+
+  for (const suffix of suffixes) {
+    const match = word.match(suffix);
+    if (match) {
+      const part = match[0];
+      return {
+        element: <>
+          {word.slice(0, -part.length)}
+          <span className='underline'>{part}</span>
+        </>,
+        highlighted: true
+      };
+    }
+  }
+
+  return { element: word, highlighted: false };
+};
