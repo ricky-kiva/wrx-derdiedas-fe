@@ -1,4 +1,4 @@
-import { slideYBlur } from '../../utils/animation';
+import { fadeBlur, slideYBlur } from '../../utils/animation';
 import ModalFooterWax from './ModalFooterWax';
 import { motion } from 'framer-motion';
 
@@ -21,12 +21,16 @@ export const LetterModal: React.FC<LetterModalProps> = (props) => {
 
   return (
     <motion.div 
-      {...slideYBlur({ y: -24 })}
+      onClick={onClose} 
+      {...fadeBlur()}
       className='fixed inset-0 z-20 bg-black/40 flex items-center justify-center'
     >
-      <div className={`relative flex flex-col
-        bg-bg-indigo bg-old-paper-texture-1 bg-cover rounded-t-2xl rounded-b-[4rem] shadow-xl text-sm text-txt-black 
-        ${isCompact ? '' : 'h-[81%] md:h-[75%]'} ${isWider ? 'w-[90%] md:w-[75%] lg:w-[42.5%]' : 'w-[88.5%] md:w-1/2 lg:w-[29.15%]'} `}
+      <motion.div
+        onClick={(e) => e.stopPropagation()} 
+        {...slideYBlur({ y: -24 })}
+        className={`relative flex flex-col
+          bg-bg-indigo bg-old-paper-texture-1 bg-cover rounded-t-2xl rounded-b-[4rem] shadow-xl text-sm text-txt-black 
+          ${isCompact ? '' : 'h-[81%] md:h-[75%]'} ${isWider ? 'w-[90%] md:w-[75%] lg:w-[42.5%]' : 'w-[88.5%] md:w-1/2 lg:w-[29.15%]'}`}
       >
         <div className='w-full flex justify-end px-6 pt-5'>
           <button 
@@ -45,7 +49,7 @@ export const LetterModal: React.FC<LetterModalProps> = (props) => {
           </div>
           <ModalFooterWax />
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
