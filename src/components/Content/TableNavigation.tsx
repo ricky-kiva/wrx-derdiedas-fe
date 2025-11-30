@@ -65,7 +65,7 @@ export const TableNavigation: React.FC<TableNavigationProps> = (props) => {
             [&::-webkit-outer-spin-button]:appearance-none
             [-moz-appearance:textfield]'
         />
-        <span>from {totalPages} pages</span>
+        <span className='hidden sm:block'>from {totalPages} pages</span>
       </div>
 
       <div className='flex items-center gap-2'>
