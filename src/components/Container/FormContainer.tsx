@@ -33,7 +33,9 @@ export const FormContainer: React.FC = () => {
 
   return (
     <motion.div
-      animate={{ y: (data ? -32 : 0) }}
+      animate={{ y: isGameRoute 
+        ? ((meanings && meanings.length > 0) ? -32 : 0) 
+        : (data ? -32 : 0)}}
       transition={{ duration: 0.4, ease: 'easeInOut' }} 
       className={`w-full md:w-3/4 ${isGameRoute ? 'lg:w-3/4' : 'lg:w-1/2'} flex flex-col gap-y-6 items-center self-center `}
     >
