@@ -1,10 +1,9 @@
-import config from '../commons/config';
 import type { EndGameData, EndGamePayload, GameAnswerData, GameAnswerPayload, GetGameData, StartGameData, StartGamePayload, UpdateGameData, UpdateGamePayload } from '../types/game/types';
 import { api } from '../lib/api/api';
 import type { ApiResponse } from '../types/shared/types';
 import type { CustomAxiosRequestConfig } from '../lib/api/types';
 
-const gameRoute = `${config.api.base}/game`;
+const gameRoute = '/game';
 
 export const answerGame = async (gameId: string, payload: GameAnswerPayload) => {
   return api.post<ApiResponse<GameAnswerData>>(`${gameRoute}/${gameId}/answer`, payload);

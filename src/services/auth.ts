@@ -1,9 +1,8 @@
 import type { LoginPayload, LoginData, LogoutPayload, RefreshTokenData } from '../types/auth/types';
-import config from '../commons/config';
 import { api } from '../lib/api/api';
 import type { ApiResponse } from '../types/shared/types';
 
-const authRoute = `${config.api.base}/auth`;
+const authRoute = '/auth';
 
 export const login = async (payload: LoginPayload) => {
   return api.post<ApiResponse<LoginData>>(`${authRoute}/login`, payload);
