@@ -1,0 +1,51 @@
+name: ci
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+jobs:
+  build-validation:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['20.x']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+  build-and-push:
+    runs-on: ubuntu-latest
+    needs: build-validation
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to Gitlab Container Registry
+        run: |
+          echo "${{ secrets.GITLAB_REGISTRY_PAT }}" \
+          | docker login registry.gitlab.com -u "${{ vars.GITLAB_USERNAME }}" --password-stdin
+      - name: Build and push Docker image
+        env:
+          IMAGE: "registry.gitlab.com/${{ vars.GITLAB_GROUP }}/${{ vars.GITLAB_PROJECT }}"
+        run: |
+          SHA_TAG="${GITHUB_SHA::8}"
+
+          docker build -t "$IMAGE:$SHA_TAG" .
+          docker push "$IMAGE:$SHA_TAG"
+
+          # if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          #   TAG="${GITHUB_REF#refs/tags/}"
+
+          #   docker tag "$IMAGE:$SHA_TAG" "$IMAGE:$TAG"
+          #   docker push "$IMAGE:$TAG"
+          # fi
+      
