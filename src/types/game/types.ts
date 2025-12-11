@@ -19,6 +19,10 @@ export interface GetGameData {
   points: number
 };
 
+export interface GetGameTokenData {
+  token: string;
+}
+
 export interface StartGameData {
   id: string;
   nouns: Omit<Noun, 'gender'>[];
