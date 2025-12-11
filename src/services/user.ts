@@ -4,14 +4,14 @@ import { api } from '../lib/api/api';
 
 const userRoute = '/users';
 
-export const deleteUser = async (userId: string) => {
-  return api.delete(`${userRoute}/${userId}`);
+export const deleteUser = async () => {
+  return api.delete(`${userRoute}/me`);
 };
 
 export const getUserPoint = async (userId: string) => {
   return api.get<ApiResponse<UserPointData>>(`${userRoute}/${userId}/points`);
 };
 
-export const updateUser = async (userId: string, payload: UpdateUserPayload) => {
-  return api.patch<ApiResponse<UpdateUserData>>(`${userRoute}/${userId}`, payload);
+export const updateUser = async (payload: UpdateUserPayload) => {
+  return api.patch<ApiResponse<UpdateUserData>>(`${userRoute}/me`, payload);
 };

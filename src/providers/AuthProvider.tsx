@@ -103,7 +103,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const updateUser = async (updates: Partial<User>): Promise<User | undefined> => {
     if (!user?.id) return undefined;
 
-    const res = await updateUserSvc(user.id, updates);
+    const res = await updateUserSvc(updates);
 
     if (res.data.status === 'success') {
       const resUser = res.data.data;
