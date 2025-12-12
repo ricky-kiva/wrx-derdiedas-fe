@@ -7,6 +7,7 @@ interface AuthCtxType {
   user: (User | null);
   login: (googleIdToken: string, fromGame?: boolean) => Promise<void>;
   logout: () => Promise<void>;
+  deleteUser: () => Promise<void>;
   updateUser: (updates: Partial<User>) => Promise<User | undefined>;
 }
 

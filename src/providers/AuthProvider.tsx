@@ -8,7 +8,7 @@ import { googleLogout } from '@react-oauth/google';
 import { LocalStorageTokens } from '../commons/LocalStorageTokens';
 import { endGame, updateGame } from '../services/game';
 import { useGameStore } from '../hooks/useGameStore';
-import { updateUser as updateUserSvc } from '../services/user';
+import { deleteUser as deleteUserSvc, updateUser as updateUserSvc } from '../services/user';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -95,6 +95,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setAccessToken(null);
         setUser(null);
         localStorage.removeItem(LocalStorageTokens.USER_INFO);
+        setToast('See you later! ❤️');
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const deleteUser = async () => {
+    if (user) {
+      try {
+        setIsLoading(true);
+        await logoutSvc({ id: user.id });
+        googleLogout();
+        await deleteUserSvc();
+      } finally {
+        setAccessToken(null);
+        setUser(null);
+        localStorage.removeItem(LocalStorageTokens.USER_INFO);
+        setToast('Deleted. Good luck on your next journey! ⛰️');
         setIsLoading(false);
       }
     }
@@ -127,7 +145,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ accessToken, isLoading, user, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ accessToken, isLoading, user, login, logout, deleteUser, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
