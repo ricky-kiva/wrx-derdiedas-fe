@@ -4,10 +4,8 @@ on:
     branches:
       - main
   push:
-    branches:
-      - main
     tags:
-      - '*'
+      - 'v*.*.*'
 jobs:
   build-validation:
     runs-on: ubuntu-latest

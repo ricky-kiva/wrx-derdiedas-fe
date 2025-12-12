@@ -1,16 +1,11 @@
 name: cd
-on:
-  workflow_run:
-    workflows:
-      - ci
-    types:
-      - completed
+on: 
+  push:
+    branches:
+      - main
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    env:
-      FULL_SHA: ${{ github.event.workflow_run.head_sha }}
     steps:
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.1
@@ -20,7 +15,7 @@ jobs:
         env:
           IMAGE: "registry.gitlab.com/${{ vars.GITLAB_GROUP }}/${{ vars.GITLAB_PROJECT }}"
         run: |
-          SHA_TAG="${FULL_SHA::8}"
+          SHA_TAG="${GITHUB_SHA::8}"
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
             set -e
             trap 'echo "Failed command: \$BASH_COMMAND at line \$LINENO"; exit 1' ERR
