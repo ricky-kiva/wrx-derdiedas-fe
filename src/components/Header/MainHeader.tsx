@@ -76,8 +76,12 @@ export const MainHeader: React.FC = () => {
     ? [
       { icon: IconUser, text: formatDisplayUsername(user.name), hideTextOnMobile: true, onClick: (() => {
         openModal({ title: `❤️ HI THERE!`, body: <UserInfo /> }, { compact: true });
+        setIsMobileMenuOpen(false);
       })},
-      { icon: IconLogout, label: 'Logout', hideTextOnMobile: true, onClick: logout }
+      { icon: IconLogout, label: 'Logout', hideTextOnMobile: true, onClick: (() => {
+        logout();
+        setIsMobileMenuOpen(false);
+      })}
     ] satisfies (GoldenButtonProps | GoldenNavProps)[] 
     : [];
 
