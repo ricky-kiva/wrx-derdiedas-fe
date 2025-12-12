@@ -31,14 +31,31 @@ jobs:
         run: |
           echo "${{ secrets.GITLAB_REGISTRY_PAT }}" \
           | docker login registry.gitlab.com -u "${{ vars.GITLAB_USERNAME }}" --password-stdin
+      - name: Determine image tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            TAG="${{ github.event.pull_request.head.sha }}"
+          else
+            TAG="${GITHUB_REF_NAME}"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
       - name: Build and push Docker image
         env:
           IMAGE: "registry.gitlab.com/${{ vars.GITLAB_GROUP }}/${{ vars.GITLAB_PROJECT }}"
+          TAG: ${{ steps.tag.outputs.tag }}
         run: |
-          SHA_TAG="${GITHUB_SHA::8}"
-
-          docker build -t "$IMAGE:$SHA_TAG" .
-          docker push "$IMAGE:$SHA_TAG"
+          docker build -t "$IMAGE:$TAG" .
+          docker push "$IMAGE:$TAG"
+      - name: Write image tag artifact
+        if: github.event_name == 'pull_request'
+        run: echo "${{ github.event.pull_request.head.sha }}" > image-tag.txt
+      - name: Upload image tag artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-tag
+          path: image-tag.txt
   cleanup-registry:
     needs: build-and-push
     runs-on: ubuntu-latest
