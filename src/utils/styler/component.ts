@@ -1,4 +1,5 @@
 export type CornerStyle = 'left' | 'right' | 'square';
+export type ButtonType = 'submit' | 'button';
 
 export const getCornerClass = (style?: CornerStyle) => {
   switch (style) {

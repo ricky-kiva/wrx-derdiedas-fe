@@ -60,7 +60,7 @@ export const GuestSubmitGameStep = () => {
             />
           </div>
         </div>
-        <GoldenButton icon={IconPlane} small={true} />
+        <GoldenButton icon={IconPlane} small={true} type='submit' />
       </form>
       <HDivider text='OR CONTINUE SCORING ANYTIME' />
       <div className='w-full flex flex-col items-center gap-2 justify-center'>

@@ -139,7 +139,7 @@ export const SearchForm: React.FC<SearchFormProps> = (props) => {
           />
         </div>
       </div>
-      <GoldenButton text='Check' icon={IconMagnifyingGlass}/>
+      <GoldenButton text='Check' type='submit' icon={IconMagnifyingGlass} />
     </motion.form>
   );
 };
