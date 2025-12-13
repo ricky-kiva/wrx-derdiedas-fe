@@ -135,6 +135,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
         setToast('Game expired or corrupted. Starting a fresh one! 🎮');
       }
     } finally {
+      isSubmittingRef.current = false;
       setIsLoading(false);
     }
   };
