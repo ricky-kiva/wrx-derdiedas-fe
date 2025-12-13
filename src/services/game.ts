@@ -9,7 +9,7 @@ const gameRoute = '/game';
 export const answerGame = async (gameId: string, payload: GameAnswerPayload) => {
   const tokenRes = await getGameToken();
   if (tokenRes.data.status !== 'success') return tokenRes as AxiosResponse<ApiResponse<GameAnswerData>>;
-  return api.post<ApiResponse<GameAnswerData>>(`${gameRoute}/${gameId}/answer`, payload, {
+  return api.post<ApiResponse<GameAnswerData>>(`${gameRoute}/${gameId}/answer/`, payload, {
     headers: { 'x-game-token': tokenRes.data.data.token }
   });
 };
@@ -17,7 +17,7 @@ export const answerGame = async (gameId: string, payload: GameAnswerPayload) => 
 export const deleteGame = async (gameId: string) => {
   const tokenRes = await getGameToken();
   if (tokenRes.data.status !== 'success') return tokenRes as AxiosResponse;
-  return api.delete(`${gameRoute}/${gameId}`, {
+  return api.delete(`${gameRoute}/${gameId}/`, {
     headers: { 'x-game-token': tokenRes.data.data.token }
   });
 };
@@ -25,23 +25,23 @@ export const deleteGame = async (gameId: string) => {
 export const endGame = async (gameId: string, payload?: EndGamePayload) => {
   const tokenRes = await getGameToken();
   if (tokenRes.data.status !== 'success') return tokenRes as AxiosResponse<ApiResponse<EndGameData>>;
-  return api.post<ApiResponse<EndGameData>>(`${gameRoute}/${gameId}/end`, payload, {
+  return api.post<ApiResponse<EndGameData>>(`${gameRoute}/${gameId}/end/`, payload, {
     headers: { 'x-game-token': tokenRes.data.data.token }
   });
 };
 
 export const getGame = async(gameId: string, config?: CustomAxiosRequestConfig) => {
-  return api.get<ApiResponse<GetGameData>>(`${gameRoute}/${gameId}`, config);
+  return api.get<ApiResponse<GetGameData>>(`${gameRoute}/${gameId}/`, config);
 };
 
 export const getGameToken = async() => {
-  return api.get<ApiResponse<GetGameTokenData>>(`${gameRoute}/token`);
+  return api.get<ApiResponse<GetGameTokenData>>(`${gameRoute}/token/`);
 };
 
 export const startGame = async (payload: StartGamePayload) => {
   const tokenRes = await getGameToken();
   if (tokenRes.data.status !== 'success') return tokenRes as AxiosResponse<ApiResponse<StartGameData>>;
-  return api.post<ApiResponse<StartGameData>>(`${gameRoute}/start`, payload, {
+  return api.post<ApiResponse<StartGameData>>(`${gameRoute}/start/`, payload, {
     headers: { 'x-game-token': tokenRes.data.data.token }
   });
 };
@@ -49,7 +49,7 @@ export const startGame = async (payload: StartGamePayload) => {
 export const updateGame = async (gameId: string, payload: UpdateGamePayload) => {
   const tokenRes = await getGameToken();
   if (tokenRes.data.status !== 'success') return tokenRes as AxiosResponse<ApiResponse<UpdateGameData>>;
-  return api.patch<ApiResponse<UpdateGameData>>(`${gameRoute}/${gameId}`, payload, {
+  return api.patch<ApiResponse<UpdateGameData>>(`${gameRoute}/${gameId}/`, payload, {
     headers: { 'x-game-token': tokenRes.data.data.token }
   });
 };

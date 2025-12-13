@@ -5,13 +5,13 @@ import type { ApiResponse } from '../types/shared/types';
 const authRoute = '/auth';
 
 export const login = async (payload: LoginPayload) => {
-  return api.post<ApiResponse<LoginData>>(`${authRoute}/login`, payload);
+  return api.post<ApiResponse<LoginData>>(`${authRoute}/login/`, payload);
 };
 
 export const logout = async (payload: LogoutPayload) => {
-  api.post(`${authRoute}/logout`, payload);
+  api.post(`${authRoute}/logout/`, payload);
 };
 
 export const refreshToken = async () => {
-  return api.post<ApiResponse<RefreshTokenData>>(`${authRoute}/refresh-token`);
+  return api.post<ApiResponse<RefreshTokenData>>(`${authRoute}/refresh-token/`);
 };
