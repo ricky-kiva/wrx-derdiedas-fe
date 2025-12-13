@@ -13,6 +13,8 @@ jobs:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
       - name: Assign image tag
         run: |
+          echo "$GITHUB_REPOSITORY"
+          
           IMAGE_TAG=$(ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
             set -e
             trap '"'"'echo "Failed command: $BASH_COMMAND at line $LINENO"; exit 1'"'"' ERR
@@ -21,7 +23,8 @@ jobs:
 
             FE_PR_NUMBER=$(grep "^FE_PR_NUMBER=" $DEPLOY_DIR/.ci.temp | cut -d"=" -f2)
             
-            LATEST_SHA=$(curl -sL -H "Accept: application/vnd.github+json" \
+            LATEST_SHA=$(curl -sL \
+              -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
               https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/${FE_PR_NUMBER}/commits \
               | jq -r ".[-1].sha")
