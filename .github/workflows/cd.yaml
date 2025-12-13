@@ -13,31 +13,25 @@ jobs:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
       - name: Assign image tag
         run: |
-          LATEST_JSON=$(curl -sL -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
-            https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/3/commits)
-
-          echo "LATEST_JSON:"
-          echo "$LATEST_JSON" | tee /tmp/latest_pr_commits.json
-
-          IMAGE_TAG=$(ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
-            set -e
-            trap '"'"'echo "Failed command: $BASH_COMMAND at line $LINENO"; exit 1'"'"' ERR
-            
-            DEPLOY_DIR=/srv/derdiedas
-
-            FE_PR_NUMBER=$(grep "^FE_PR_NUMBER=" $DEPLOY_DIR/.ci.temp | cut -d"=" -f2)
-            
-            LATEST_SHA=$(curl -sL \
-              -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
-              https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/${FE_PR_NUMBER}/commits \
-              | jq -r ".[-1].sha")
-            
-            echo "${LATEST_SHA:0:8}"
+          FE_PR_NUMBER=$(ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
+            grep "^FE_PR_NUMBER=" /srv/derdiedas/.ci.temp | cut -d"=" -f2 | tr -d "[:space:]"
           ')
 
-          echo "$IMAGE_TAG"
+          if [ -z "$FE_PR_NUMBER" ]; then
+            echo "FE_PR_NUMBER is empty!"
+            exit 1
+          fi
+
+          LATEST_JSON=$(curl -sL -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
+            https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/${FE_PR_NUMBER}/commits)
+
+          echo "LATEST_JSON:"
+          echo "$LATEST_JSON"
+
+          LATEST_SHA=$(echo "$LATEST_JSON" | jq -r '.[-1].sha')
+          IMAGE_TAG="${LATEST_SHA::8}"
+
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
       - name: Login and pull image from Gitlab
         env:
