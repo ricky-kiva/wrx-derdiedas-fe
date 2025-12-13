@@ -15,7 +15,7 @@ jobs:
         run: |
           LATEST_JSON=$(curl -sL -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
-            https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/${FE_PR_NUMBER}/commits)
+            https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/3/commits)
 
           echo "LATEST_JSON:"
           echo "$LATEST_JSON" | tee /tmp/latest_pr_commits.json
