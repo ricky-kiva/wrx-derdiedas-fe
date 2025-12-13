@@ -28,7 +28,6 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
   const [highlightedWord, setHighlightedWord] = useState<string | JSX.Element>('');
 
   const gameStartedRef = useRef(false);
-  const isSubmittingRef = useRef(false);
   
   const { user } = useAuth();
   const { setToast } = useToast();
@@ -98,13 +97,9 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
   };
 
   const handleAnswer = async (answer: Exclude<Gender, '?'>) => {
-    if (isSubmittingRef.current) return;
-    if (!gameId || !nouns?.[0]) return;
-
-    isSubmittingRef.current = true;
-    setIsLoading(true);
-
     try {
+      setIsLoading(true);
+
       if (gameId !== null) {
         const res = await answerGame(gameId, {
           answer,
@@ -116,9 +111,10 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
           const { correct, currentScore, nouns: nextNouns } = res.data.data;
 
           setPoints(currentScore);
-          setNouns(nextNouns ?? nouns.slice(1));
-          setMeanings((nextNouns ?? nouns.slice(1))[0].meanings);
+          setNouns(nextNouns ? nextNouns : nouns.slice(1));
+          setMeanings(nextNouns ? nextNouns[0].meanings : nouns.slice(1)[0].meanings);
           handleCorrect(correct);
+          return;
         }
       }
     } catch {
@@ -126,7 +122,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
 
       if (resNewGame.data.status === 'success') {
         localStorage.setItem(LocalStorageTokens.GAME_ID, resNewGame.data.data.id);
-
+        
         setGameId(resNewGame.data.data.id);
         setNouns(resNewGame.data.data.nouns);
         setMeanings(resNewGame.data.data.nouns[0].meanings);
@@ -135,7 +131,6 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
         setToast('Game expired or corrupted. Starting a fresh one! 🎮');
       }
     } finally {
-      isSubmittingRef.current = false;
       setIsLoading(false);
     }
   };
