@@ -47,7 +47,11 @@ jobs:
         run: |
           docker build -t "$IMAGE:$IMAGE_TAG" .
           docker push "$IMAGE:$IMAGE_TAG"
-      - name: SSH and write PR number
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+      - name: Write PR number temp on VPS
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
