@@ -36,7 +36,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
             set -e
-            trap 'echo "Failed command: $BASH_COMMAND at line $LINENO"; exit 1' ERR
+            trap 'echo "Failed command: \$BASH_COMMAND at line \$LINENO"; exit 1' ERR
 
             login_gitlab() {
               echo "Logging in to GitLab Registry.."
@@ -44,18 +44,17 @@ jobs:
             }
 
             pull_image() {
-              echo "Pulling new Docker image.."
-              echo "${IMAGE}:${IMAGE_TAG}"
+              echo "Pulling new Docker image: ${IMAGE}:${IMAGE_TAG}"
               docker pull "${IMAGE}:${IMAGE_TAG}"
             }
 
             cleanup_old_images() {
               echo "Cleaning up old Docker images.."
-              OLD_IMAGES=$(docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | grep "^${IMAGE}:" | grep -v ":${IMAGE_TAG}" | awk '{print $2}')
+              OLD_IMAGES=\$(docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | grep "^${IMAGE}:" | grep -v ":${IMAGE_TAG}" | awk '{print \$2}')
               
-              if [ -n "$OLD_IMAGES" ]; then
-                docker rmi -f $OLD_IMAGES || true
-                echo "$OLD_IMAGES removed"
+              if [ -n "\$OLD_IMAGES" ]; then
+                docker rmi -f \$OLD_IMAGES || true
+                echo "\$OLD_IMAGES removed"
               else
                 echo "No old images to remove."
               fi
