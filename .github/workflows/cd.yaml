@@ -34,7 +34,7 @@ jobs:
         env:
           IMAGE: "registry.gitlab.com/${{ vars.GITLAB_GROUP }}/${{ vars.GITLAB_PROJECT }}"
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "IMAGE_TAG=$IMAGE_TAG bash -s" << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
             set -e
             trap 'echo "Failed command: $BASH_COMMAND at line $LINENO"; exit 1' ERR
 
