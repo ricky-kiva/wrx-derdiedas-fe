@@ -22,7 +22,7 @@ jobs:
             FE_PR_NUMBER=$(grep "^FE_PR_NUMBER=" $DEPLOY_DIR/.ci.temp | cut -d"=" -f2)
             
             LATEST_SHA=$(curl -sL -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
               https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/${FE_PR_NUMBER}/commits \
               | jq -r ".[-1].sha")
             
