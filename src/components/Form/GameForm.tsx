@@ -99,6 +99,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
 
   const handleAnswer = async (answer: Exclude<Gender, '?'>) => {
     if (isSubmittingRef.current) return;
+    if (!gameId || !nouns?.[0]) return;
 
     isSubmittingRef.current = true;
     setIsLoading(true);
