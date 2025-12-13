@@ -7,27 +7,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Download image tag artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: image-tag
-          path: .
-      - name: Determine image tag used by CI
-        id: resolve
-        run: |
-          PR_SHA=""
-          
-          if [ -f image-tag.txt ]; then
-            PR_SHA=$(cat image-tag.txt)
-          fi
-
-          if [ -n "$PR_SHA" ]; then
-            echo "tag=$PR_SHA" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          echo "Unable to determine image tag"
-          exit 1
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.1
         with:
@@ -35,8 +14,8 @@ jobs:
       - name: Login and pull image from Gitlab
         env:
           IMAGE: "registry.gitlab.com/${{ vars.GITLAB_GROUP }}/${{ vars.GITLAB_PROJECT }}"
-          TAG: ${{ steps.resolve.outputs.tag }}
         run: |
+          SHA_TAG="${GITHUB_SHA::8}"
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
             set -e
             trap 'echo "Failed command: \$BASH_COMMAND at line \$LINENO"; exit 1' ERR
@@ -48,12 +27,12 @@ jobs:
 
             pull_image() {
               echo "Pulling new Docker image.."
-              docker pull "${IMAGE}:${TAG}"
+              docker pull "${IMAGE}:${SHA_TAG}"
             }
 
             cleanup_old_images() {
               echo "Cleaning up old Docker images.."
-              OLD_IMAGES=\$(docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | grep "^${IMAGE}:" | grep -v ":${TAG}" | awk '{print $2}')
+              OLD_IMAGES=\$(docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | grep "^${IMAGE}:" | grep -v ":${SHA_TAG}" | awk '{print $2}')
               
               if [ -n "\$OLD_IMAGES" ]; then
                 docker rmi -f \$OLD_IMAGES || true
@@ -68,9 +47,8 @@ jobs:
             cleanup_old_images
           EOF
       - name: Deploy to VPS
-        env:
-          TAG: ${{ steps.resolve.outputs.tag }}
         run: |
+          SHA_TAG="${FULL_SHA::8}"
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
             set -e
             trap 'echo "Failed command: \$BASH_COMMAND at line \$LINENO"; exit 1' ERR
@@ -82,7 +60,7 @@ jobs:
               mkdir -p \$DEPLOY_DIR
               touch \$DEPLOY_DIR/.deploy.env
               sed -i '/^FE_SHA_TAG=/d' \$DEPLOY_DIR/.deploy.env
-              echo "FE_SHA_TAG=${TAG}" >> \$DEPLOY_DIR/.deploy.env
+              echo "FE_SHA_TAG=${SHA_TAG}" >> \$DEPLOY_DIR/.deploy.env
             }
             
             update_containers() {
