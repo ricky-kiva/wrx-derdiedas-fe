@@ -44,7 +44,6 @@ jobs:
             }
 
             pull_image() {
-              echo "Pulling new Docker image: ${IMAGE}:${IMAGE_TAG}"
               docker pull "${IMAGE}:${IMAGE_TAG}"
             }
 
@@ -66,23 +65,23 @@ jobs:
           EOF
       - name: Deploy to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "IMAGE_TAG=$IMAGE_TAG bash -s" << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
             set -e
-            trap 'echo "Failed command: $BASH_COMMAND at line $LINENO"; exit 1' ERR
+            trap 'echo "Failed command: \$BASH_COMMAND at line \$LINENO"; exit 1' ERR
 
             DEPLOY_DIR=/srv/derdiedas
 
             create_deploy_env() {
               echo "Updating .deploy.env file.."
-              mkdir -p $DEPLOY_DIR
-              touch $DEPLOY_DIR/.deploy.env
-              sed -i '/^FE_SHA_TAG=/d' $DEPLOY_DIR/.deploy.env
-              echo "FE_SHA_TAG=$IMAGE_TAG" >> $DEPLOY_DIR/.deploy.env
+              mkdir -p \$DEPLOY_DIR
+              touch \$DEPLOY_DIR/.deploy.env
+              sed -i '/^FE_SHA_TAG=/d' \$DEPLOY_DIR/.deploy.env
+              echo "FE_SHA_TAG=${IMAGE_TAG}" >> \$DEPLOY_DIR/.deploy.env
             }
 
             update_containers() {
               echo "Updating containers.."
-              cd $DEPLOY_DIR || exit
+              cd \$DEPLOY_DIR || exit
               docker compose --env-file .deploy.env -p derdiedas up -d --remove-orphans
             }
 
