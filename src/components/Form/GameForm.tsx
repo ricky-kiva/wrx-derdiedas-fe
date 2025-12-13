@@ -28,7 +28,6 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
   const [highlightedWord, setHighlightedWord] = useState<string | JSX.Element>('');
 
   const gameStartedRef = useRef(false);
-  const isSubmittingRef = useRef(false);
   
   const { user } = useAuth();
   const { setToast } = useToast();
@@ -98,12 +97,9 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
   };
 
   const handleAnswer = async (answer: Exclude<Gender, '?'>) => {
-    if (isSubmittingRef.current) return;
-
-    isSubmittingRef.current = true;
-    setIsLoading(true);
-
     try {
+      setIsLoading(true);
+
       if (gameId !== null) {
         const res = await answerGame(gameId, {
           answer,
@@ -135,7 +131,6 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
         setToast('Game expired or corrupted. Starting a fresh one! 🎮');
       }
     } finally {
-      isSubmittingRef.current = false;
       setIsLoading(false);
     }
   };
@@ -185,9 +180,9 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
       </div>
       <div className='flex flex-row-reverse lg:flex-row w-full lg:w-fit justify-between gap-x-4'>
         <div className='flex'>
-          <GoldenButton text='DER' cornerStyle={isMobile ? 'left' : 'square'} inRow={true} onClick={() => handleAnswer("masculine")} />
-          <GoldenButton text='DIE' cornerStyle='square' inRow={true} onClick={() => handleAnswer("feminine")} />
-          <GoldenButton text='DAS' cornerStyle='right' onClick={() => handleAnswer("neuter")} />
+          <GoldenButton text='DER' cornerStyle={isMobile ? 'left' : 'square'} inRow={true} onClick={() => { if (!isLoading) handleAnswer("masculine"); }} />
+          <GoldenButton text='DIE' cornerStyle='square' inRow={true} onClick={() => { if (!isLoading) handleAnswer("feminine"); }} />
+          <GoldenButton text='DAS' cornerStyle='right' onClick={() => { if (!isLoading) handleAnswer("neuter"); }} />
         </div>
         <GoldenButton text='Done' icon={IconCheck} onClick={handleDone} />
       </div>
