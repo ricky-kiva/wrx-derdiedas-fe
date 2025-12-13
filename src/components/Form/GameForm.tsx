@@ -28,6 +28,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
   const [highlightedWord, setHighlightedWord] = useState<string | JSX.Element>('');
 
   const gameStartedRef = useRef(false);
+  const isSubmittingRef = useRef(false);
   
   const { user } = useAuth();
   const { setToast } = useToast();
@@ -97,9 +98,12 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
   };
 
   const handleAnswer = async (answer: Exclude<Gender, '?'>) => {
-    try {
-      setIsLoading(true);
+    if (isSubmittingRef.current) return;
 
+    isSubmittingRef.current = true;
+    setIsLoading(true);
+
+    try {
       if (gameId !== null) {
         const res = await answerGame(gameId, {
           answer,
@@ -111,10 +115,9 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
           const { correct, currentScore, nouns: nextNouns } = res.data.data;
 
           setPoints(currentScore);
-          setNouns(nextNouns ? nextNouns : nouns.slice(1));
-          setMeanings(nextNouns ? nextNouns[0].meanings : nouns.slice(1)[0].meanings);
+          setNouns(nextNouns ?? nouns.slice(1));
+          setMeanings((nextNouns ?? nouns.slice(1))[0].meanings);
           handleCorrect(correct);
-          return;
         }
       }
     } catch {
@@ -122,7 +125,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
 
       if (resNewGame.data.status === 'success') {
         localStorage.setItem(LocalStorageTokens.GAME_ID, resNewGame.data.data.id);
-        
+
         setGameId(resNewGame.data.data.id);
         setNouns(resNewGame.data.data.nouns);
         setMeanings(resNewGame.data.data.nouns[0].meanings);
@@ -131,6 +134,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
         setToast('Game expired or corrupted. Starting a fresh one! 🎮');
       }
     } finally {
+      isSubmittingRef.current = false;
       setIsLoading(false);
     }
   };
@@ -180,9 +184,9 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
       </div>
       <div className='flex flex-row-reverse lg:flex-row w-full lg:w-fit justify-between gap-x-4'>
         <div className='flex'>
-          <GoldenButton text='DER' cornerStyle={isMobile ? 'left' : 'square'} inRow={true} onClick={() => { if (!isLoading) handleAnswer("masculine"); }} />
-          <GoldenButton text='DIE' cornerStyle='square' inRow={true} onClick={() => { if (!isLoading) handleAnswer("feminine"); }} />
-          <GoldenButton text='DAS' cornerStyle='right' onClick={() => { if (!isLoading) handleAnswer("neuter"); }} />
+          <GoldenButton text='DER' cornerStyle={isMobile ? 'left' : 'square'} inRow={true} onClick={() => handleAnswer("masculine")} />
+          <GoldenButton text='DIE' cornerStyle='square' inRow={true} onClick={() => handleAnswer("feminine")} />
+          <GoldenButton text='DAS' cornerStyle='right' onClick={() => handleAnswer("neuter")} />
         </div>
         <GoldenButton text='Done' icon={IconCheck} onClick={handleDone} />
       </div>
