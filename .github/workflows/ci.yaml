@@ -3,9 +3,9 @@ on:
   pull_request:
     branches:
       - main
-  push:
-    tags:
-      - 'v*.*.*'
+  # push:
+  #   tags:
+  #     - 'v*.*.*'
 jobs:
   build-validation:
     runs-on: ubuntu-latest
@@ -27,6 +27,16 @@ jobs:
     needs: build-validation
     steps:
       - uses: actions/checkout@v3
+      - name: Set Docker image tag
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            IMAGE_TAG=$(jq -r .pull_request.head.sha "$GITHUB_EVENT_PATH")
+            IMAGE_TAG="${IMAGE_TAG::8}"
+          # else
+          #   IMAGE_TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "$IMAGE_TAG"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
       - name: Login to Gitlab Container Registry
         run: |
           echo "${{ secrets.GITLAB_REGISTRY_PAT }}" \
@@ -35,10 +45,31 @@ jobs:
         env:
           IMAGE: "registry.gitlab.com/${{ vars.GITLAB_GROUP }}/${{ vars.GITLAB_PROJECT }}"
         run: |
-          SHA_TAG="${GITHUB_SHA::8}"
+          docker build -t "$IMAGE:$IMAGE_TAG" .
+          docker push "$IMAGE:$IMAGE_TAG"
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+      - name: Write PR number temp on VPS
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
+            set -e
+            trap 'echo "Failed command: \$BASH_COMMAND at line \$LINENO"; exit 1' ERR
 
-          docker build -t "$IMAGE:$SHA_TAG" .
-          docker push "$IMAGE:$SHA_TAG"
+            DEPLOY_DIR=/srv/derdiedas
+
+            create_ci_temp() {
+              echo "Updating .ci.temp file.."
+              mkdir -p \$DEPLOY_DIR
+              touch \$DEPLOY_DIR/.ci.temp
+              sed -i '/^FE_PR_NUMBER=/d' \$DEPLOY_DIR/.ci.temp
+              echo "FE_PR_NUMBER=${PR_NUMBER}" >> \$DEPLOY_DIR/.ci.temp
+            }
+
+            create_ci_temp
+          EOF
   cleanup-registry:
     needs: build-and-push
     runs-on: ubuntu-latest

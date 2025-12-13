@@ -11,14 +11,33 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+      - name: Assign image tag
+        run: |
+          IMAGE_TAG=$(ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
+            set -e
+            trap '"'"'echo "Failed command: $BASH_COMMAND at line $LINENO"; exit 1'"'"' ERR
+            
+            DEPLOY_DIR=/srv/derdiedas
+
+            FE_PR_NUMBER=$(grep "^FE_PR_NUMBER=" $DEPLOY_DIR/.ci.temp | cut -d"=" -f2)
+            
+            LATEST_SHA=$(curl -sL -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
+              https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/${FE_PR_NUMBER}/commits \
+              | jq -r ".[-1].sha")
+            
+            echo "${LATEST_SHA:0:8}"
+          ')
+
+          echo "$IMAGE_TAG"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
       - name: Login and pull image from Gitlab
         env:
           IMAGE: "registry.gitlab.com/${{ vars.GITLAB_GROUP }}/${{ vars.GITLAB_PROJECT }}"
         run: |
-          SHA_TAG="${GITHUB_SHA::8}"
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "IMAGE_TAG=$IMAGE_TAG bash -s" << 'EOF'
             set -e
-            trap 'echo "Failed command: \$BASH_COMMAND at line \$LINENO"; exit 1' ERR
+            trap 'echo "Failed command: $BASH_COMMAND at line $LINENO"; exit 1' ERR
 
             login_gitlab() {
               echo "Logging in to GitLab Registry.."
@@ -27,16 +46,16 @@ jobs:
 
             pull_image() {
               echo "Pulling new Docker image.."
-              docker pull "${IMAGE}:${SHA_TAG}"
+              docker pull "${IMAGE}:${IMAGE_TAG}"
             }
 
             cleanup_old_images() {
               echo "Cleaning up old Docker images.."
-              OLD_IMAGES=\$(docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | grep "^${IMAGE}:" | grep -v ":${SHA_TAG}" | awk '{print $2}')
+              OLD_IMAGES=$(docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | grep "^${IMAGE}:" | grep -v ":${IMAGE_TAG}" | awk '{print $2}')
               
-              if [ -n "\$OLD_IMAGES" ]; then
-                docker rmi -f \$OLD_IMAGES || true
-                echo "\$OLD_IMAGES removed"
+              if [ -n "$OLD_IMAGES" ]; then
+                docker rmi -f $OLD_IMAGES || true
+                echo "$OLD_IMAGES removed"
               else
                 echo "No old images to remove."
               fi
@@ -48,24 +67,23 @@ jobs:
           EOF
       - name: Deploy to VPS
         run: |
-          SHA_TAG="${FULL_SHA::8}"
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "IMAGE_TAG=$IMAGE_TAG bash -s" << 'EOF'
             set -e
-            trap 'echo "Failed command: \$BASH_COMMAND at line \$LINENO"; exit 1' ERR
+            trap 'echo "Failed command: $BASH_COMMAND at line $LINENO"; exit 1' ERR
 
             DEPLOY_DIR=/srv/derdiedas
 
             create_deploy_env() {
               echo "Updating .deploy.env file.."
-              mkdir -p \$DEPLOY_DIR
-              touch \$DEPLOY_DIR/.deploy.env
-              sed -i '/^FE_SHA_TAG=/d' \$DEPLOY_DIR/.deploy.env
-              echo "FE_SHA_TAG=${SHA_TAG}" >> \$DEPLOY_DIR/.deploy.env
+              mkdir -p $DEPLOY_DIR
+              touch $DEPLOY_DIR/.deploy.env
+              sed -i '/^FE_SHA_TAG=/d' $DEPLOY_DIR/.deploy.env
+              echo "FE_SHA_TAG=$IMAGE_TAG" >> $DEPLOY_DIR/.deploy.env
             }
-            
+
             update_containers() {
               echo "Updating containers.."
-              cd \$DEPLOY_DIR || exit
+              cd $DEPLOY_DIR || exit
               docker compose --env-file .deploy.env -p derdiedas up -d --remove-orphans
             }
 
