@@ -11,6 +11,7 @@ import { useModal } from '../../hooks/useModal';
 
 export const GuestSubmitGameStep = () => {
   const [name, setName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const { setToast } = useToast();
   const { closeModal } = useModal();
@@ -29,6 +30,8 @@ export const GuestSubmitGameStep = () => {
       return;
     }
 
+    setIsLoading(true);
+
     const res = await endGame(gameId, { name });
 
     if (res.data.status === 'success') {
@@ -38,6 +41,7 @@ export const GuestSubmitGameStep = () => {
       localStorage.removeItem(LocalStorageTokens.GAME_ID);
     }
 
+    setIsLoading(false);
     closeModal();
     navigate('/');
   };
@@ -60,7 +64,7 @@ export const GuestSubmitGameStep = () => {
             />
           </div>
         </div>
-        <GoldenButton icon={IconPlane} small={true} type='submit' />
+        <GoldenButton icon={IconPlane} isLoading={isLoading} small={true} type='submit' />
       </form>
       <HDivider text='OR CONTINUE SCORING ANYTIME' />
       <div className='w-full flex flex-col items-center gap-2 justify-center'>
