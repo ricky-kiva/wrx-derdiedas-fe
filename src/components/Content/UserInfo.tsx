@@ -40,8 +40,9 @@ export const UserInfo: React.FC = () => {
         if (res.data.status === 'success') {
           setPoint(formatNumberSuffix(res.data.data.point)); 
         }
-      } finally {
+      } catch {
         setPoint('0');
+      } finally {
         setIsPointLoading(false);
       }
     };
