@@ -98,9 +98,11 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
   };
 
   const handleAnswer = async (answer: Exclude<Gender, '?'>) => {
-    try {
-      setIsLoading(true);
+    if (isLoading) return;
 
+    setIsLoading(true);
+
+    try {
       if (gameId !== null) {
         const res = await answerGame(gameId, {
           answer,
