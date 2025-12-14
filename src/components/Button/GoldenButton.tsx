@@ -7,6 +7,7 @@ export interface GoldenButtonProps {
   icon?: React.FC<React.SVGProps<SVGSVGElement>>;
   label?: string;
   type?: ButtonType;
+  isLoading?: boolean;
   buttonRef?: Ref<HTMLButtonElement>
   hideTextOnMobile?: boolean;
   cornerStyle?: CornerStyle;
@@ -22,6 +23,7 @@ export const GoldenButton: React.FC<GoldenButtonProps> = (props) => {
     text, icon, label, buttonRef, cornerStyle, onClick,
     type='button',
     hideTextOnMobile=false, 
+    isLoading=false,
     small=false, 
     compact=false, 
     inRow=false,
@@ -41,7 +43,7 @@ export const GoldenButton: React.FC<GoldenButtonProps> = (props) => {
       className={`w-fit ${small ? 'h-8' : 'h-10'} flex border-gold-color-only border-gold-hover transition-all active:scale-[0.98] 
         ${cornerClass} ${paddingClass} ${isIconOnly ? 'aspect-square': hideTextOnMobile ? 'lg:aspect-auto aspect-square' : ''}`}
     >
-      <GoldenFilledLabel text={text} icon={icon} hideTextOnMobile={hideTextOnMobile} cornerStyle={cornerStyle} small={small} compact={compact} iconLeft={iconLeft} />
+      <GoldenFilledLabel text={text} icon={icon} hideTextOnMobile={hideTextOnMobile} isLoading={isLoading} cornerStyle={cornerStyle} small={small} compact={compact} iconLeft={iconLeft} />
     </button>
   );
 };
