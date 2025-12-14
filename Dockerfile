@@ -27,9 +27,8 @@ RUN npm install -g serve
 COPY --from=build /usr/src/app/dist ./
 
 COPY public/env ./env
-COPY scripts/docker/env/replace-runtime-config.sh /docker-entrypoint.sh
+COPY scripts/docker/env/temp-replace-runtime-config.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
-EXPOSE 80
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
 EXPOSE 3000
