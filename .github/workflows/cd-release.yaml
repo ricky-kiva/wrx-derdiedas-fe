@@ -1,0 +1,77 @@
+name: cd-release
+on:
+  workflow_run:
+    workflows:
+      - ci-release
+    types:
+      - completed
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+      - name: Login and pull image from Gitlab
+        env:
+          IMAGE: "registry.gitlab.com/${{ vars.GITLAB_GROUP }}/${{ vars.GITLAB_PROJECT }}"
+          IMAGE_TAG: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
+            set -e
+            trap 'echo "Failed command: \$BASH_COMMAND at line \$LINENO"; exit 1' ERR
+
+            login_gitlab() {
+              echo "Logging in to GitLab Registry.."
+              echo "${{ secrets.GITLAB_REGISTRY_PAT }}" | docker login registry.gitlab.com -u "${{ vars.GITLAB_USERNAME }}" --password-stdin
+            }
+
+            pull_image() {
+              docker pull "${IMAGE}:${IMAGE_TAG}"
+            }
+
+            cleanup_old_images() {
+              echo "Cleaning up old Docker images.."
+              OLD_IMAGES=\$(docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | grep "^${IMAGE}:" | grep -v ":${IMAGE_TAG}" | awk '{print \$2}')
+              
+              if [ -n "\$OLD_IMAGES" ]; then
+                docker rmi -f \$OLD_IMAGES || true
+                echo "\$OLD_IMAGES removed"
+              else
+                echo "No old images to remove."
+              fi
+            }
+
+            login_gitlab
+            pull_image
+            cleanup_old_images
+          EOF
+      - name: Deploy to VPS
+        env:
+          IMAGE_TAG: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << EOF
+            set -e
+            trap 'echo "Failed command: \$BASH_COMMAND at line \$LINENO"; exit 1' ERR
+
+            DEPLOY_DIR=/srv/derdiedas
+
+            create_deploy_env() {
+              echo "Updating .deploy.env file.."
+              mkdir -p \$DEPLOY_DIR
+              touch \$DEPLOY_DIR/.deploy.env
+              sed -i '/^FE_SHA_TAG=/d' \$DEPLOY_DIR/.deploy.env
+              echo "FE_SHA_TAG=${IMAGE_TAG}" >> \$DEPLOY_DIR/.deploy.env
+            }
+
+            update_containers() {
+              echo "Updating containers.."
+              cd \$DEPLOY_DIR || exit
+              docker compose --env-file .deploy.env -p derdiedas up -d --remove-orphans
+            }
+
+            create_deploy_env
+            update_containers
+          EOF
