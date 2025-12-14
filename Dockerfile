@@ -23,7 +23,10 @@ RUN npm run build
 # --- Temporary runtime using 'serve' for troubleshooting ---
 FROM node:22-alpine AS runtime
 WORKDIR /usr/src/app
-RUN npm install -g serve
+
+RUN apk add --no-cache gettext \
+  && npm install -g serve
+
 COPY --from=build /usr/src/app/dist ./
 
 COPY public/env ./env
