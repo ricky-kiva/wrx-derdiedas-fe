@@ -24,6 +24,7 @@ interface GameFormProps {
 
 export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighted }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSavingGame, setIsSavingGame] = useState(false);
   const [points, setPoints] = useState(0);
   const [highlightedWord, setHighlightedWord] = useState<string | JSX.Element>('');
 
@@ -139,8 +140,10 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
     if (!gameId) return;
 
     if (user) {
+      setIsSavingGame(true);
       await endGame(gameId);
       localStorage.removeItem(LocalStorageTokens.GAME_ID);
+      setIsSavingGame(false);
       setToast('Game ended. Points are saved! 🎯');
       navigate('/');
       return;
@@ -184,7 +187,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
           <GoldenButton text='DIE' cornerStyle='square' inRow={true} onClick={() => handleAnswer("feminine")} />
           <GoldenButton text='DAS' cornerStyle='right' onClick={() => handleAnswer("neuter")} />
         </div>
-        <GoldenButton text='Done' icon={IconCheck} onClick={handleDone} />
+        <GoldenButton text='Done' icon={IconCheck} isLoading={isSavingGame} onClick={handleDone} />
       </div>
     </motion.div>
   );
