@@ -1,0 +1,81 @@
+name: ci-release
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+jobs:
+  build-validation:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['20.x']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+  build-and-push:
+    runs-on: ubuntu-latest
+    needs: build-validation
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set Docker image tag
+        run: |
+          IMAGE_TAG="${GITHUB_REF#refs/tags/}"
+
+          echo "$IMAGE_TAG"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+      - name: Login to Gitlab Container Registry
+        run: |
+          echo "${{ secrets.GITLAB_REGISTRY_PAT }}" \
+          | docker login registry.gitlab.com -u "${{ vars.GITLAB_USERNAME }}" --password-stdin
+      - name: Build and push Docker image
+        env:
+          IMAGE: "registry.gitlab.com/${{ vars.GITLAB_GROUP }}/${{ vars.GITLAB_PROJECT }}"
+        run: |
+          docker build -t "$IMAGE:$IMAGE_TAG" .
+          docker push "$IMAGE:$IMAGE_TAG"
+  cleanup-registry:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean up GitLab Container Registry
+        env:
+          GITLAB_REGISTRY_PAT: ${{ secrets.GITLAB_REGISTRY_PAT }}
+          GITLAB_PROJECT_ID: ${{ vars.GITLAB_PROJECT_ID }}
+        run: |
+          API="https://gitlab.com/api/v4/projects/${GITLAB_PROJECT_ID}/registry/repositories"
+
+          REPOS_JSON=$(curl -s --header "PRIVATE-TOKEN: $GITLAB_REGISTRY_PAT" "$API")
+
+          REPO_ID=$(echo "$REPOS_JSON" | jq -r 'if type=="array" then .[0].id else .id end')
+
+          TAGS=$(curl -s --header "PRIVATE-TOKEN: $GITLAB_REGISTRY_PAT" "$API/$REPO_ID/tags")
+
+          echo "$TAGS" | jq -r '.[].name' > all_tags.txt
+
+          grep -E '^v?[0-9]+\.[0-9]+' all_tags.txt > version_tags.txt || true
+          grep -E '^[0-9a-f]{8}$' all_tags.txt > sha_tags.txt || true
+
+          echo "" > tags_with_dates.txt
+          while read -r TAG; do
+            [ -z "$TAG" ] && continue
+            TAG_DETAIL=$(curl -s --header "PRIVATE-TOKEN: $GITLAB_REGISTRY_PAT" "$API/$REPO_ID/tags/$TAG")
+            CREATED=$(echo "$TAG_DETAIL" | jq -r '.created_at')
+            echo "$CREATED $TAG" >> tags_with_dates.txt
+          done < sha_tags.txt
+
+          sort -r tags_with_dates.txt | awk '{print $2}' | tail -n +4 > old_sha_tags.txt
+
+          while read -r TAG; do
+            [ -z "$TAG" ] && continue
+            curl -s --request DELETE \
+              --header "PRIVATE-TOKEN: $GITLAB_REGISTRY_PAT" \
+              "$API/$REPO_ID/tags/$TAG"
+            echo "Deleted tag: $TAG"
+          done < old_sha_tags.txt
