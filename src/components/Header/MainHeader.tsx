@@ -104,7 +104,7 @@ export const MainHeader: React.FC = () => {
           <img
             src={LogoDerDieDas}
             alt="DerDieDas Logo"
-            className="w-16 hover:animate-spin-propeller"
+            className="lg:w-16 w-14 hover:animate-spin-propeller"
           />
         </Link>
         <HeaderMenu itemProps={isMobile ? mobileNavItemProps : navItemProps} />

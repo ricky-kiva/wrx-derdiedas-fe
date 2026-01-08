@@ -16,7 +16,7 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ itemProps }) => {
   const isGameRoute = pathName.startsWith('/game');
 
   return (
-    <nav className='flex gap-2 justify-end'>
+    <nav className='flex gap-1 lg:gap-2 justify-end'>
       {itemProps.map((prop, i) => {
         if ('to' in prop) return <GoldenNav key={i} {...prop} />;
         return <GoldenButton key={i} {...prop} buttonRef={'buttonRef' in prop ? prop.buttonRef : undefined} />;
