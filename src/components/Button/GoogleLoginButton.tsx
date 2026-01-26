@@ -40,5 +40,6 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = (props) => {
     text={isMobile ? 'signin' : 'signin_with'}
     shape={isMobile ? 'pill' : 'rectangular'}
     theme={isMobile ? 'filled_black' : 'outline'}
+    width={isMobile ? 48 : undefined}
   />;
 };

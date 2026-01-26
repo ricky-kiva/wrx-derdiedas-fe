@@ -37,11 +37,16 @@ export default {
           '50%':  { transform: 'translate(-50%, 0%)',    opacity: '1' },
           '85%':  { transform: 'translate(-50%, 0%)',    opacity: '1' },
           '100%': { transform: 'translate(-50%, 200%)',  opacity: '0' }
+        },
+        'bg-pulse': {
+          '0%, 100%': { backgroundColor: 'rgb(var(--color-brdr-black-rgb) / 1)' },
+          '50%': { backgroundColor: 'rgb(var(--color-brdr-black-rgb) / 0)' } 
         }
       },
       animation: {
         'spin-propeller': 'spin-propeller 1.6s cubic-bezier(0.2, 0.0, 0.1, 1) forwards',
-        'error-jump': 'error-jump 2s ease-in-out forwards'
+        'error-jump': 'error-jump 2s ease-in-out forwards',
+        'bg-pulse': 'bg-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
       },
       fontFamily: {
         noto: ['Noto Sans', 'sans-serif']

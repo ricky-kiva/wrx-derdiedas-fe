@@ -21,9 +21,13 @@ import { useIsMobile } from '../../hooks/useIsMobile';
 import { useEffect, useRef, useState } from 'react';
 import type { GoldenNavProps } from '../Nav';
 import { AnimatePresence } from 'framer-motion';
+import { LocalStorageTokens } from '../../commons/LocalStorageTokens';
+
+const NOTE_NOTIF_INTERVAL = 14 * 24 * 60 * 60 * 1000;
 
 export const MainHeader: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNoteUnread, setIsNoteUnread] = useState(false);
 
   const menuRef = useRef<HTMLDivElement | null>(null);
   const mobileMenuNavRef = useRef<HTMLButtonElement>(null);
@@ -52,8 +56,31 @@ export const MainHeader: React.FC = () => {
     return () => document.removeEventListener('pointerdown', handler);
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    const storedNoteDismissedData = localStorage.getItem(LocalStorageTokens.NOTE_LAST_DISMISSED_AT);
+
+    if (!storedNoteDismissedData) {
+      setIsNoteUnread(true);
+      return;
+    }
+
+    const clickedAt = Number(storedNoteDismissedData);
+
+    if (!Number.isFinite(clickedAt)) {
+      localStorage.removeItem(LocalStorageTokens.NOTE_LAST_DISMISSED_AT);
+      setIsNoteUnread(true);
+      return;
+    }
+
+    const now = Date.now();
+
+    setIsNoteUnread(now - clickedAt >= NOTE_NOTIF_INTERVAL);
+  }, []);
+
   const noteNavItem = { icon: IconBook, label: 'Note for DerDieDas', onClick: (() => {
     openModal({ title: '📕 NOTE ON DERDIEDAS', body: <DDDNote /> });
+    localStorage.setItem(LocalStorageTokens.NOTE_LAST_DISMISSED_AT, Date.now().toString());
+    setIsNoteUnread(false);
     setIsMobileMenuOpen(false);
   })};
 
@@ -104,12 +131,14 @@ export const MainHeader: React.FC = () => {
           <img
             src={LogoDerDieDas}
             alt="DerDieDas Logo"
-            className="w-16 hover:animate-spin-propeller"
+            className="sm:w-16 w-14 hover:animate-spin-propeller"
           />
         </Link>
-        <HeaderMenu itemProps={isMobile ? mobileNavItemProps : navItemProps} />
+        <HeaderMenu itemProps={isMobile ? mobileNavItemProps : navItemProps} isNoteUnread={isNoteUnread} />
         <AnimatePresence>
-          {isMobileMenuOpen && isMobile && <MobileHeaderMenu ref={menuRef} itemProps={mobileMenuItemProps} />}
+          {isMobileMenuOpen && isMobile && <MobileHeaderMenu 
+            ref={menuRef} itemProps={mobileMenuItemProps} isNoteUnread={isNoteUnread} 
+          />}
         </AnimatePresence>
         {!user && <div className='absolute right-0 top-full mt-1 hidden lg:block'>
           <GoogleLoginButton fromGame={isGameRoute ? true : false} />

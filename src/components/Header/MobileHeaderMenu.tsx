@@ -8,10 +8,11 @@ import { slideYBlur } from '../../utils/animation';
 
 interface MobileHeaderMenuProps {
   itemProps: (GoldenButtonProps | GoldenNavProps)[];
+  isNoteUnread: boolean;
 }
 
 export const MobileHeaderMenu = forwardRef<HTMLDivElement, MobileHeaderMenuProps>(
-  ({ itemProps }, ref) => {
+  ({ itemProps, isNoteUnread }, ref) => {
     return (
       <motion.div
         ref={ref}
@@ -23,7 +24,9 @@ export const MobileHeaderMenu = forwardRef<HTMLDivElement, MobileHeaderMenuProps
 
           const content = (
             <nav className="group flex gap-3 items-center text-brdr-goldBrdrBottom hover:text-brdr-goldBrdrTop transition-colors duration-200">
-              {Icon && <Icon className="w-3 h-3 fill-brdr-goldBrdrBottom group-hover:fill-brdr-goldBrdrTop" />}
+              {Icon && <Icon className={`w-3 h-3 fill-brdr-goldBrdrBottom group-hover:fill-brdr-goldBrdrTop
+                ${isNoteUnread && item.label?.toLowerCase().startsWith('note ') ? 'animate-bounce' : ''}
+              `} />}
               {'label' in item && item.label}
               {'text' in item && item.text}
             </nav>
