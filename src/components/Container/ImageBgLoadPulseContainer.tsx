@@ -42,7 +42,7 @@ export const ImageBgLoadPulseContainer: React.FC<ImageBgLoadPulseContainer> = (p
         <img
           src={img}
           alt={imgAlt}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${bgLoaded ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute inset-0 w-full h-full object-cover object-[37.5%_center] sm:object-center transition-opacity duration-700 ${bgLoaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => { setBgLoaded(true); }}
         />
         {bottomGradient && <div
