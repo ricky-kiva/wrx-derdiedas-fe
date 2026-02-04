@@ -183,7 +183,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
           </div>
         </div>
       </div>
-      <div className='flex flex-row-reverse lg:flex-row w-full lg:w-fit justify-between gap-x-4'>
+      <div className='flex flex-row-reverse lg:flex-row w-full lg:w-fit justify-between gap-x-2'>
         <div className='flex'>
           <GoldenButton text='DER' cornerStyle={isMobile ? 'left' : 'square'} inRow={true} onClick={() => handleAnswer("masculine")} />
           <GoldenButton text='DIE' cornerStyle='square' inRow={true} onClick={() => handleAnswer("feminine")} />
