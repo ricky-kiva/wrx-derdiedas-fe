@@ -47,7 +47,7 @@ export const GuestSubmitGameStep = () => {
   };
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col mb-3 sm:mb-0'>
       <form 
         onSubmit={handleSubmit}
         className='flex gap-x-2 md:gap-x-4'
@@ -66,7 +66,7 @@ export const GuestSubmitGameStep = () => {
         </div>
         <GoldenButton icon={IconPlane} isLoading={isLoading} small={true} type='submit' />
       </form>
-      <HDivider text='OR CONTINUE SCORING ANYTIME' />
+      <HDivider text='OR KEEP SCORING ANYTIME' />
       <div className='w-full flex flex-col items-center gap-2 justify-center'>
         <GoogleLoginButton fromGame={true} />
         <p className='text-[0.6rem] opacity-70 italic'>*Sign in to continue scoring anytime!</p>

@@ -152,7 +152,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
     }
 
     openModal({ 
-      title: '🏅 SUBMIT SCORE TO LEADERBOARD',
+      title: '🏅 SUBMIT YOUR SCORE',
       body: <GuestSubmitGameStep />
     }, { compact: true });
   };
@@ -174,8 +174,8 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
             <div className='relative w-full flex justify-center items-center gap-x-2 px-5 bg-btn-gold rounded-bl-full rounded-r-full lg:rounded-r-none lg:rounded-none'>
               <AnimatePresence mode='wait'>
                 { isLoading 
-                ? <motion.div {...fadeBlur()}>
-                  <Lottie animationData={LottieLoading} loop autoplay className='scale-[0.125] origin-center ml-1'/>
+                ? <motion.div {...fadeBlur()} className='w-7 h-7 flex'>
+                  <Lottie animationData={LottieLoading} loop autoplay className='scale-[1.25] origin-center'/>
                 </motion.div>
                 : <motion.span {...fadeBlur()} className='ml-1 break-all'>{highlightedWord}</motion.span> }
               </AnimatePresence>
@@ -183,7 +183,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
           </div>
         </div>
       </div>
-      <div className='flex flex-row-reverse lg:flex-row w-full lg:w-fit justify-between gap-x-4'>
+      <div className='flex flex-row-reverse lg:flex-row w-full lg:w-fit justify-between gap-x-2'>
         <div className='flex'>
           <GoldenButton text='DER' cornerStyle={isMobile ? 'left' : 'square'} inRow={true} onClick={() => handleAnswer("masculine")} />
           <GoldenButton text='DIE' cornerStyle='square' inRow={true} onClick={() => handleAnswer("feminine")} />

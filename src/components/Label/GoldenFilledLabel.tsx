@@ -24,7 +24,7 @@ export const GoldenFilledLabel: React.FC<GoldenFilledLabelProps> = (props) => {
     ? 'w-full h-full justify-center'
     : hideTextOnMobile
       ? `lg:gap-x-2 ${compact ? 'lg:px-3' : 'lg:px-5'} gap-0 ${compact ? 'px-4' : 'px-0'} w-full h-full justify-center lg:justify-start`
-      : `gap-x-2 ${compact ? 'px-3' : 'px-5'}`;
+      : `gap-x-2 ${compact ? 'px-3' : 'px-4'}`;
 
   const textNode = !isIconOnly && (<span className={hideTextOnMobile ? 'hidden lg:inline' : 'inline'}>{text}</span>);
   const iconNode = isLoading 

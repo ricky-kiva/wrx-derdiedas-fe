@@ -30,7 +30,7 @@ export const LetterModal: React.FC<LetterModalProps> = (props) => {
         {...slideYBlur({ y: -24 })}
         className={`relative flex flex-col
           bg-bg-indigo bg-old-paper-texture-1 bg-cover rounded-t-2xl rounded-b-[4rem] shadow-xl text-sm text-txt-black 
-          ${isCompact ? '' : 'h-[81%] md:h-[75%]'} ${isWider ? 'w-[90%] md:w-[75%] lg:w-[42.5%]' : 'w-[88.5%] md:w-1/2 lg:w-[29.15%]'}`}
+          ${isCompact ? '' : 'h-[81%] md:h-[75%]'} ${isWider ? 'w-[90%] md:w-[75%] lg:w-[42.5%]' : 'w-[88.5%] md:w-1/2 lg:w-[30.5%]'}`}
       >
         <div className='w-full flex justify-end px-6 pt-5'>
           <button 
@@ -42,7 +42,7 @@ export const LetterModal: React.FC<LetterModalProps> = (props) => {
             x
           </button>
         </div>
-        <div className='flex-1 flex flex-col gap-3 min-h-0 px-12 py-10'>
+        <div className='flex-1 flex flex-col gap-3 min-h-0 py-8 sm:py-10 px-10 sm:px-12'>
           <h3 className="mb-1 opacity-85 uppercase">{content?.title}</h3>
           <div className="flex-1 overflow-y-auto min-h-0 scrollbar-custom-gold opacity-85">
             {content?.body}
