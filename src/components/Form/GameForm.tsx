@@ -152,7 +152,7 @@ export const GameForm: React.FC<GameFormProps> = ({ setMeanings, setIsHighlighte
     }
 
     openModal({ 
-      title: '🏅 SUBMIT SCORE TO LEADERBOARD',
+      title: '🏅 SUBMIT YOUR SCORE',
       body: <GuestSubmitGameStep />
     }, { compact: true });
   };
