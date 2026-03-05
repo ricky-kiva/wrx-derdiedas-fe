@@ -27,7 +27,7 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ itemProps, isNoteUnread }) => {
             <motion.div
               aria-hidden
               className="absolute h-10 w-10 rounded-full bg-brdr-goldBrdrTop pointer-events-none"
-              animate={{ scale: [1, 1.5], opacity: [0.8, 0] }}
+              animate={{ scale: [1, 1.5, 1], opacity: [0.8, 0, 0] }}
               transition={{ duration: 1, repeat: Infinity }}
             />
             <div className='relative'>
