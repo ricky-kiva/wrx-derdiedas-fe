@@ -9,6 +9,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/ricky-kiva/wrx-derdiedas-fe/actions/workflows/ci-pr.yaml"><img src="https://github.com/ricky-kiva/wrx-derdiedas-fe/actions/workflows/ci-pr.yaml/badge.svg" alt="CI status" /></a>
   <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/22-339933?logo=nodedotjs&logoColor=white" alt="Node.js 22" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/5.8.3-3178C6?logo=typescript&logoColor=white" alt="TypeScript 5.8.3" /></a>
   <a href="https://react.dev/"><img src="https://img.shields.io/badge/19.1.0-61DAFB?logo=react&logoColor=black" alt="React 19.1.0" /></a>
