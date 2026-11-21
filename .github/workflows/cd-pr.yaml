@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: read
+  pull-requests: read
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -12,24 +15,46 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
       - name: Assign image tag
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
+
           FE_PR_NUMBER=$(ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
-            grep "^FE_PR_NUMBER=" /srv/derdiedas/.ci.temp | cut -d"=" -f2 | tr -d "[:space:]"
+            grep "^FE_PR_NUMBER=" /srv/derdiedas/.ci.temp | tail -n 1 | cut -d"=" -f2 | tr -d "[:space:]"
           ')
 
-          if [ -z "$FE_PR_NUMBER" ]; then
-            echo "FE_PR_NUMBER is empty!"
+          case "$FE_PR_NUMBER" in
+            ''|*[!0-9]*)
+              echo "Invalid or empty FE_PR_NUMBER: '$FE_PR_NUMBER'"
+              exit 1
+              ;;
+          esac
+
+          RESPONSE_FILE="$RUNNER_TEMP/pull-request.json"
+          HTTP_STATUS=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${FE_PR_NUMBER}")
+
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "GitHub API request for PR #${FE_PR_NUMBER} failed with HTTP ${HTTP_STATUS}:"
+            if ! jq -r '.message // .' "$RESPONSE_FILE" 2>/dev/null; then
+              cat "$RESPONSE_FILE"
+            fi
             exit 1
           fi
 
-          LATEST_JSON=$(curl -sL -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
-            https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/${FE_PR_NUMBER}/commits)
+          LATEST_SHA=$(jq -r '.head.sha // empty' "$RESPONSE_FILE")
 
-          LATEST_SHA=$(echo "$LATEST_JSON" | jq -r '.[-1].sha')
+          if [ -z "$LATEST_SHA" ]; then
+            echo "Could not resolve the head commit for PR #${FE_PR_NUMBER}."
+            exit 1
+          fi
+
           IMAGE_TAG="${LATEST_SHA::8}"
 
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_ENV"
       - name: Login and pull image from Gitlab
         env:
           IMAGE: "registry.gitlab.com/${{ vars.GITLAB_GROUP }}/${{ vars.GITLAB_PROJECT }}"
