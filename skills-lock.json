@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "documentation-and-adrs": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/documentation-and-adrs/SKILL.md",
+      "computedHash": "d18839f61c631ba3b8c223e9ee159f454359cac9b8f0df8d39201298cd37f54c"
+    }
+  }
+}
