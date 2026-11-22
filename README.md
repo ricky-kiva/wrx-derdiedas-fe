@@ -36,6 +36,10 @@ This repository contains the frontend only. The API lives in the [backend reposi
 - Google sign-in, display-name editing, point lookup, and account deletion.
 - Responsive, animated UI built with Tailwind CSS, Framer Motion, and Lottie.
 
+## Design
+
+The UI/UX design is available on [Figma](https://www.figma.com/design/KJSVu16EsgVfJFClcTssq9/Derdiedas?node-id=0-1&t=tjNBe2lqXbVB8ro9-1).
+
 ## Commands
 
 | Command | Description |
